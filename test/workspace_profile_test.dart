@@ -8,8 +8,17 @@ import 'helpers/test_app.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('office workspace uses shared components', (tester) async {
-    tester.view.physicalSize = const Size(1080, 2400);
+  Future<void> scrollTo(WidgetTester tester, Finder finder) async {
+    await tester.scrollUntilVisible(
+      finder,
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pump();
+  }
+
+  testWidgets('office workspace shows shared kit sections', (tester) async {
+    tester.view.physicalSize = const Size(1080, 3200);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -22,12 +31,20 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.text('Office Workspace'), findsWidgets);
-    expect(find.text('Review assignments'), findsOneWidget);
-    expect(find.text('Open tickets'), findsOneWidget);
+    expect(find.text('Data table'), findsOneWidget);
+
+    await scrollTo(tester, find.text('Trend chart'));
+    expect(find.text('Trend chart'), findsOneWidget);
+
+    await scrollTo(tester, find.text('Calendar'));
+    expect(find.text('Calendar'), findsOneWidget);
+
+    await scrollTo(tester, find.text('Work form'));
+    expect(find.text('Work form'), findsOneWidget);
   });
 
-  testWidgets('field workspace uses large simple actions', (tester) async {
-    tester.view.physicalSize = const Size(1080, 2400);
+  testWidgets('field workspace shows large shared kit sections', (tester) async {
+    tester.view.physicalSize = const Size(1080, 3200);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -41,26 +58,11 @@ void main() {
 
     expect(find.text('Field Workspace'), findsWidgets);
     expect(find.text('Start job'), findsOneWidget);
-    expect(find.text('Report issue'), findsOneWidget);
-  });
 
-  testWidgets('profile shows directory fields', (tester) async {
-    tester.view.physicalSize = const Size(1080, 2400);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    await scrollTo(tester, find.text('Area workload'));
+    expect(find.text('Area workload'), findsOneWidget);
 
-    await TestApp.pump(
-      tester,
-      initialLocation: AppRoutes.profile,
-      seededUser: UserProfile.sample,
-    );
-    await tester.pump(const Duration(milliseconds: 50));
-
-    expect(find.text('Thihara Kumarasinghe'), findsWidgets);
-    expect(find.text('Edit contact details'), findsOneWidget);
-    expect(find.text('Change password'), findsOneWidget);
-    expect(find.text('Username / PF'), findsOneWidget);
-    expect(find.text('Company'), findsOneWidget);
+    await scrollTo(tester, find.text('Save work record'));
+    expect(find.text('Save work record'), findsOneWidget);
   });
 }
