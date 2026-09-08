@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/context_extensions.dart';
+import '../utils/media_url.dart';
 
 class AppUserAvatar extends StatelessWidget {
   const AppUserAvatar({
@@ -18,21 +19,29 @@ class AppUserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatar = CircleAvatar(
-      radius: radius,
-      backgroundColor: context.colors.primaryContainer,
-      foregroundColor: context.colors.onPrimaryContainer,
-      backgroundImage: imageUrl == null ? null : NetworkImage(imageUrl!),
-      child: imageUrl == null
-          ? Text(
-              name.initials,
-              style: context.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-                fontSize: radius * 0.72,
-                color: context.colors.onPrimaryContainer,
+    final resolved = resolveMediaUrl(imageUrl);
+    final size = radius * 2;
+    final avatar = ClipOval(
+      child: Container(
+        width: size,
+        height: size,
+        color: context.colors.primaryContainer,
+        alignment: Alignment.center,
+        child: resolved == null
+            ? _Initials(name: name, radius: radius)
+            : Image.network(
+                resolved,
+                width: size,
+                height: size,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) =>
+                    _Initials(name: name, radius: radius),
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return _Initials(name: name, radius: radius);
+                },
               ),
-            )
-          : null,
+      ),
     );
 
     if (onTap == null) return avatar;
@@ -40,6 +49,25 @@ class AppUserAvatar extends StatelessWidget {
       onTap: onTap,
       customBorder: const CircleBorder(),
       child: avatar,
+    );
+  }
+}
+
+class _Initials extends StatelessWidget {
+  const _Initials({required this.name, required this.radius});
+
+  final String name;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      name.initials,
+      style: context.textTheme.labelLarge?.copyWith(
+        fontWeight: FontWeight.w700,
+        fontSize: radius * 0.72,
+        color: context.colors.onPrimaryContainer,
+      ),
     );
   }
 }

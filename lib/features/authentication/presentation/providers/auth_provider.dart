@@ -132,12 +132,69 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
-    await _repository.logout();
-    state = const AuthState(isInitialized: true);
+    try {
+      await _repository.logout();
+    } finally {
+      state = const AuthState(isInitialized: true);
+    }
   }
 
   Future<void> requestPasswordReset(String identifier) {
     return _repository.requestPasswordReset(identifier);
+  }
+
+  Future<bool> refreshProfile() async {
+    try {
+      final user = await _repository.refreshProfile();
+      state = state.copyWith(user: user, isAuthenticated: true);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> updateContact({
+    required String fullName,
+    required String email,
+    required String mobile,
+    required String landline,
+  }) async {
+    try {
+      final user = await _repository.updateContact(
+        fullName: fullName,
+        email: email,
+        mobile: mobile,
+        landline: landline,
+      );
+      state = state.copyWith(
+        user: user,
+        isAuthenticated: true,
+        clearError: true,
+      );
+      return true;
+    } catch (error) {
+      state = state.copyWith(errorMessage: error.toString());
+      return false;
+    }
+  }
+
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      await _repository.changePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      );
+      await logout();
+      return true;
+    } catch (error) {
+      state = state.copyWith(errorMessage: error.toString());
+      return false;
+    }
   }
 }
 

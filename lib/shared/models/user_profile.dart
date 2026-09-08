@@ -12,6 +12,14 @@ class UserProfile {
     this.username,
     this.companyId,
     this.avatarUrl,
+    this.landline = '',
+    this.userType = '',
+    this.lastActivity = '',
+    this.divisionId = '',
+    this.branchId = '',
+    this.unitId = '',
+    this.subUnitId = '',
+    this.roles = const [],
   });
 
   final String? id;
@@ -23,12 +31,37 @@ class UserProfile {
   final String office;
   final String email;
   final String mobile;
+  final String landline;
+  final String userType;
+  final String lastActivity;
+  final String divisionId;
+  final String branchId;
+  final String unitId;
+  final String subUnitId;
   final String status;
   final String? avatarUrl;
+  final List<String> roles;
 
   String get firstName {
     final parts = fullName.trim().split(RegExp(r'\s+'));
     return parts.isEmpty ? fullName : parts.first;
+  }
+
+  String get titleLine {
+    if (designation.isNotEmpty) return designation;
+    if (userType.isNotEmpty) return userType;
+    return companyId ?? '';
+  }
+
+  String get organizationLine {
+    final parts = [
+      if (divisionId.isNotEmpty) divisionId,
+      if (branchId.isNotEmpty) branchId,
+      if (unitId.isNotEmpty) unitId,
+      if (subUnitId.isNotEmpty) subUnitId,
+    ];
+    if (parts.isNotEmpty) return parts.join(' · ');
+    return office;
   }
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -36,6 +69,17 @@ class UserProfile {
       final value = json[camel] ?? json[pascal];
       if (value == null) return fallback;
       return value.toString();
+    }
+
+    List<String> readRoles() {
+      final value = json['roles'] ?? json['Roles'];
+      if (value is List) {
+        return value
+            .map((item) => item.toString())
+            .where((item) => item.isNotEmpty)
+            .toList();
+      }
+      return const [];
     }
 
     return UserProfile(
@@ -48,8 +92,16 @@ class UserProfile {
       office: read('office', 'Office'),
       email: read('email', 'Email'),
       mobile: read('mobile', 'Mobile'),
+      landline: read('landline', 'Landline'),
+      userType: read('userType', 'UserType'),
+      lastActivity: read('lastActivity', 'LastActivity'),
+      divisionId: read('divisionId', 'DivisionId'),
+      branchId: read('branchId', 'BranchId'),
+      unitId: read('unitId', 'UnitId'),
+      subUnitId: read('subUnitId', 'SubUnitId'),
       status: read('status', 'Status', 'Active'),
       avatarUrl: read('avatarUrl', 'AvatarUrl').ifEmpty(null),
+      roles: readRoles(),
     );
   }
 
@@ -64,9 +116,48 @@ class UserProfile {
       'office': office,
       'email': email,
       'mobile': mobile,
+      'landline': landline,
+      'userType': userType,
+      'lastActivity': lastActivity,
+      'divisionId': divisionId,
+      'branchId': branchId,
+      'unitId': unitId,
+      'subUnitId': subUnitId,
       'status': status,
       'avatarUrl': avatarUrl,
+      'roles': roles,
     };
+  }
+
+  UserProfile copyWith({
+    String? fullName,
+    String? email,
+    String? mobile,
+    String? landline,
+    String? avatarUrl,
+    List<String>? roles,
+  }) {
+    return UserProfile(
+      id: id,
+      username: username,
+      companyId: companyId,
+      fullName: fullName ?? this.fullName,
+      employeeId: employeeId,
+      designation: designation,
+      office: office,
+      email: email ?? this.email,
+      mobile: mobile ?? this.mobile,
+      landline: landline ?? this.landline,
+      userType: userType,
+      lastActivity: lastActivity,
+      divisionId: divisionId,
+      branchId: branchId,
+      unitId: unitId,
+      subUnitId: subUnitId,
+      status: status,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      roles: roles ?? this.roles,
+    );
   }
 
   static const sample = UserProfile(
@@ -79,7 +170,14 @@ class UserProfile {
     office: 'EDL',
     email: 'thihara.kumarasinghe@edl.la',
     mobile: '+856 20 000 0000',
+    landline: '',
+    userType: 'Staff',
+    lastActivity: '',
+    divisionId: 'DD1',
+    branchId: '',
+    unitId: '',
     status: 'Active',
+    roles: ['User'],
   );
 }
 

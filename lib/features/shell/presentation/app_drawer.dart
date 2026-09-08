@@ -30,6 +30,19 @@ class AppDrawer extends ConsumerWidget {
 
   final String currentLocation;
 
+  static const List<DrawerDestination> workspaceItems = [
+    DrawerDestination(
+      route: AppRoutes.officeWorkspace,
+      label: 'Office Workspace',
+      icon: Icons.apartment_outlined,
+    ),
+    DrawerDestination(
+      route: AppRoutes.fieldWorkspace,
+      label: 'Field Workspace',
+      icon: Icons.explore_outlined,
+    ),
+  ];
+
   static const List<DrawerDestination> primaryItems = [
     DrawerDestination(
       route: AppRoutes.dashboard,
@@ -91,6 +104,10 @@ class AppDrawer extends ConsumerWidget {
     ),
   ];
 
+  bool get _workspaceSelected =>
+      currentLocation == AppRoutes.officeWorkspace ||
+      currentLocation == AppRoutes.fieldWorkspace;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
@@ -112,7 +129,15 @@ class AppDrawer extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.md),
                   Row(
                     children: [
-                      AppUserAvatar(name: user.fullName, radius: 24),
+                      AppUserAvatar(
+                        name: user.fullName,
+                        imageUrl: user.avatarUrl,
+                        radius: 24,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          context.go(AppRoutes.profile);
+                        },
+                      ),
                       const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Column(
@@ -125,9 +150,9 @@ class AppDrawer extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              user.designation.isEmpty
+                              user.titleLine.isEmpty
                                   ? AppConfig.companyName
-                                  : user.designation,
+                                  : user.titleLine,
                               style: context.textTheme.bodySmall?.copyWith(
                                 color: context.colors.onSurfaceVariant,
                               ),
@@ -152,12 +177,51 @@ class AppDrawer extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
                 children: [
-                  ...primaryItems.map(
-                    (item) => _DrawerTile(
-                      destination: item,
-                      selected: currentLocation == item.route,
+                  _DrawerTile(
+                    destination: primaryItems.first,
+                    selected: currentLocation == AppRoutes.dashboard,
+                  ),
+                  Theme(
+                    data: Theme.of(
+                      context,
+                    ).copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      initiallyExpanded: _workspaceSelected,
+                      leading: Icon(
+                        Icons.workspaces_outlined,
+                        color: _workspaceSelected
+                            ? context.colors.primary
+                            : null,
+                      ),
+                      title: Text(
+                        'Workspaces',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontWeight: _workspaceSelected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                          color: _workspaceSelected
+                              ? context.colors.primary
+                              : null,
+                        ),
+                      ),
+                      children: [
+                        for (final item in workspaceItems)
+                          _DrawerTile(
+                            destination: item,
+                            selected: currentLocation == item.route,
+                            indent: true,
+                          ),
+                      ],
                     ),
                   ),
+                  ...primaryItems
+                      .skip(1)
+                      .map(
+                        (item) => _DrawerTile(
+                          destination: item,
+                          selected: currentLocation == item.route,
+                        ),
+                      ),
                   const Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
@@ -184,7 +248,7 @@ class AppDrawer extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              onTap: () => _logout(context, ref),
+              onTap: () => confirmAndLogout(context, ref),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -200,37 +264,43 @@ class AppDrawer extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Future<void> _logout(BuildContext context, WidgetRef ref) async {
-    Navigator.of(context).pop();
-    final confirmed = await AppConfirmationDialog.show(
-      context,
-      title: 'Sign out?',
-      message:
-          'You will need to sign in again to access ${AppConstants.appName}.',
-      confirmLabel: 'Logout',
-      isDestructive: true,
-    );
-    if (!confirmed) return;
-    await ref.read(authProvider.notifier).logout();
-    if (context.mounted) {
-      context.go(AppRoutes.login);
-    }
+Future<void> confirmAndLogout(BuildContext context, WidgetRef ref) async {
+  final confirmed = await AppConfirmationDialog.show(
+    context,
+    title: 'Sign out?',
+    message:
+        'You will need to sign in again to access ${AppConstants.appName}.',
+    confirmLabel: 'Logout',
+    isDestructive: true,
+  );
+  if (!confirmed || !context.mounted) return;
+  await ref.read(authProvider.notifier).logout();
+  if (context.mounted) {
+    context.go(AppRoutes.login);
   }
 }
 
 class _DrawerTile extends StatelessWidget {
-  const _DrawerTile({required this.destination, required this.selected});
+  const _DrawerTile({
+    required this.destination,
+    required this.selected,
+    this.indent = false,
+  });
 
   final DrawerDestination destination;
   final bool selected;
+  final bool indent;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: 2,
+      padding: EdgeInsets.fromLTRB(
+        indent ? AppSpacing.lg : AppSpacing.xs,
+        2,
+        AppSpacing.xs,
+        2,
       ),
       child: ListTile(
         selected: selected,

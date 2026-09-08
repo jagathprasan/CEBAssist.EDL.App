@@ -21,6 +21,8 @@ class ApiAuthRepository implements AuthRepository {
   String get _loginPath => '/${AppConfig.companyId}/Login';
   String get _mePath => '/${AppConfig.companyId}/Me';
   String get _logoutPath => '/${AppConfig.companyId}/Logout';
+  String get _contactPath => '/${AppConfig.companyId}/Contact';
+  String get _passwordPath => '/${AppConfig.companyId}/ChangePassword';
 
   @override
   Future<UserProfile> login({
@@ -132,6 +134,95 @@ class ApiAuthRepository implements AuthRepository {
     }
     throw const AuthException(
       'Password resets are handled by your administrator. Contact CEBAssist support if you cannot sign in.',
+    );
+  }
+
+  @override
+  Future<UserProfile> refreshProfile() async {
+    final token = await _currentToken();
+    if (token == null || token.isEmpty) {
+      throw const AuthException(
+        'Your session has expired. Please sign in again.',
+      );
+    }
+    try {
+      final payload = await api.getJson(_mePath, accessToken: token);
+      final user = UserProfile.fromJson(payload);
+      await _cacheUser(user);
+      return user;
+    } on ApiException catch (error) {
+      throw AuthException(error.message);
+    }
+  }
+
+  @override
+  Future<UserProfile> updateContact({
+    required String fullName,
+    required String email,
+    required String mobile,
+    required String landline,
+  }) async {
+    final token = await _currentToken();
+    if (token == null || token.isEmpty) {
+      throw const AuthException(
+        'Your session has expired. Please sign in again.',
+      );
+    }
+    try {
+      final payload = await api.postJson(
+        _contactPath,
+        accessToken: token,
+        body: {
+          'fullName': fullName.trim(),
+          'email': email.trim(),
+          'mobile': mobile.trim(),
+          'landline': landline.trim(),
+        },
+      );
+      final user = UserProfile.fromJson(payload);
+      await _cacheUser(user);
+      return user;
+    } on ApiException catch (error) {
+      throw AuthException(error.message);
+    }
+  }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final token = await _currentToken();
+    if (token == null || token.isEmpty) {
+      throw const AuthException(
+        'Your session has expired. Please sign in again.',
+      );
+    }
+    try {
+      await api.postJson(
+        _passwordPath,
+        accessToken: token,
+        body: {
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+          'confirmPassword': confirmPassword,
+        },
+      );
+    } on ApiException catch (error) {
+      throw AuthException(error.message);
+    }
+  }
+
+  Future<void> _cacheUser(UserProfile user) async {
+    if (!storage.rememberSession) return;
+    final token = await _currentToken();
+    final expiry = await sessionStore.readExpiry();
+    if (token == null) return;
+    await sessionStore.saveSession(
+      accessToken: token,
+      expiresAt: expiry ?? DateTime.now().toUtc().add(const Duration(hours: 8)),
+      profile: user.toJson(),
     );
   }
 

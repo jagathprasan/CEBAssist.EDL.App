@@ -6,12 +6,12 @@ class FakeAuthRepository implements AuthRepository {
   FakeAuthRepository({
     this.validUsername = 'edl.user',
     this.validPassword = 'SecurePass1',
-    this.user = UserProfile.sample,
-  });
+    UserProfile? user,
+  }) : user = user ?? UserProfile.sample;
 
   final String validUsername;
   final String validPassword;
-  final UserProfile user;
+  UserProfile user;
 
   bool _remembered = false;
 
@@ -44,6 +44,39 @@ class FakeAuthRepository implements AuthRepository {
   Future<void> requestPasswordReset(String identifier) async {
     if (identifier.trim().isEmpty) {
       throw const AuthException('Enter your username to continue.');
+    }
+  }
+
+  @override
+  Future<UserProfile> refreshProfile() async => user;
+
+  @override
+  Future<UserProfile> updateContact({
+    required String fullName,
+    required String email,
+    required String mobile,
+    required String landline,
+  }) async {
+    user = user.copyWith(
+      fullName: fullName,
+      email: email,
+      mobile: mobile,
+      landline: landline,
+    );
+    return user;
+  }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    if (currentPassword != validPassword) {
+      throw const AuthException('Current password is incorrect.');
+    }
+    if (newPassword != confirmPassword) {
+      throw const AuthException('New password and confirmation do not match.');
     }
   }
 }

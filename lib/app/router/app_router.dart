@@ -12,6 +12,8 @@ import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/shell/presentation/app_shell.dart';
 import '../../features/splash/presentation/splash_screen.dart';
+import '../../features/workspaces/field_workspace_screen.dart';
+import '../../features/workspaces/office_workspace_screen.dart';
 import 'app_routes.dart';
 
 /// Optional start path used by widget tests.
@@ -67,6 +69,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: AppRoutes.dashboard,
             builder: (context, state) => const DashboardScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.officeWorkspace,
+            builder: (context, state) => const OfficeWorkspaceScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.fieldWorkspace,
+            builder: (context, state) => const FieldWorkspaceScreen(),
           ),
           GoRoute(
             path: AppRoutes.notifications,
