@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
 
-/// Visual density for indoor office vs outdoor field work.
-enum WorkspaceMode { office, field }
+import '../../app/theme/app_design_tokens.dart';
+import '../../app/theme/app_ui_mode.dart';
+
+export '../../app/theme/app_ui_mode.dart';
+
+/// Workspace density. Alias of [AppUiMode] so existing screens keep compiling.
+typedef WorkspaceMode = AppUiMode;
 
 class WorkspaceMetrics {
   const WorkspaceMetrics(this.mode);
 
-  final WorkspaceMode mode;
+  final AppUiMode mode;
 
-  bool get isField => mode == WorkspaceMode.field;
+  bool get isField => mode.isField;
 
-  double get titleSize => isField ? 28 : 20;
-  double get subtitleSize => isField ? 18 : 14;
-  double get bodySize => isField ? 20 : 14;
-  double get labelSize => isField ? 16 : 12;
-  double get iconSize => isField ? 32 : 22;
-  double get buttonHeight => isField ? 64 : 48;
-  double get cardPadding => isField ? 20 : 16;
-  double get gap => isField ? 16 : 12;
-  FontWeight get titleWeight => FontWeight.w800;
+  double get titleSize => tokens.titleSize;
+  double get subtitleSize => tokens.subtitleSize;
+  double get bodySize => tokens.bodySize;
+  double get labelSize => tokens.labelSize;
+  double get iconSize => tokens.iconSize;
+  double get buttonHeight => tokens.buttonHeightMd;
+  double get cardPadding => tokens.cardPadding;
+  double get gap => tokens.gap;
+  FontWeight get titleWeight => tokens.titleWeight;
+
+  AppDesignTokens get tokens => AppDesignTokens.of(mode);
 }
 
-class WorkspaceScope extends InheritedWidget {
-  const WorkspaceScope({super.key, required this.mode, required super.child});
+/// Lookup helpers for the inherited [AppUiModeScope].
+class WorkspaceScope {
+  const WorkspaceScope._();
 
-  final WorkspaceMode mode;
-
-  static WorkspaceMode of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<WorkspaceScope>()?.mode ??
-        WorkspaceMode.office;
-  }
+  static AppUiMode of(BuildContext context) => AppUiModeScope.of(context);
 
   static WorkspaceMetrics metricsOf(BuildContext context) {
-    return WorkspaceMetrics(of(context));
+    return WorkspaceMetrics(AppUiModeScope.of(context));
   }
-
-  @override
-  bool updateShouldNotify(WorkspaceScope oldWidget) => mode != oldWidget.mode;
 }

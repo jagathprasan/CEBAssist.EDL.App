@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../core/extensions/context_extensions.dart';
 import '../../shared/widgets/widgets.dart';
+import '../../showcase/app_widget_catalog.dart';
 
-/// Outdoor crew workspace: one current job, large sunlight-friendly targets.
+/// Outdoor crew workspace: large sunlight-friendly targets plus the shared kit.
 class FieldWorkspaceView extends StatefulWidget {
   const FieldWorkspaceView({super.key});
 
@@ -25,6 +26,7 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppDesignTokens.ofContext(context);
     return AppRefreshIndicator(
       onRefresh: () async {
         await Future<void>.delayed(const Duration(milliseconds: 500));
@@ -32,10 +34,10 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
         AppFeedback.toast(context, 'Jobs refreshed');
       },
       child: AppScrollableColumn(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
+        padding: EdgeInsets.fromLTRB(
+          tokens.cardPadding,
           AppSpacing.sm,
-          AppSpacing.md,
+          tokens.cardPadding,
           AppSpacing.xl,
         ),
         children: [
@@ -44,10 +46,10 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
             title: 'On site',
             message: 'GPS locked · Unit A feeder · 120 m from the job.',
           ),
-          const SizedBox(height: AppSpacing.md),
+          SizedBox(height: tokens.gap),
           AppCard(
             elevated: false,
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: EdgeInsets.all(tokens.cardPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -57,6 +59,7 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
                       'Current job',
                       style: context.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w700,
+                        fontSize: tokens.labelSize,
                         color: context.colors.onSurfaceVariant,
                       ),
                     ),
@@ -68,37 +71,38 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                SizedBox(height: tokens.gap / 2),
                 Text(
                   'Feeder inspection',
                   style: context.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
+                    fontWeight: tokens.titleWeight,
+                    fontSize: tokens.titleSize,
                     height: 1.1,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                SizedBox(height: tokens.gap / 3),
                 Text(
                   'Unit A · Crew 3',
                   style: context.textTheme.titleMedium?.copyWith(
                     color: context.colors.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
+                    fontSize: tokens.subtitleSize,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                const AppIconLabel(
+                SizedBox(height: tokens.gap),
+                AppIconLabel(
                   icon: Icons.place_outlined,
                   label: 'Feeder 11, pole 24',
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                SizedBox(height: tokens.gap / 3),
                 const AppIconLabel(
                   icon: Icons.schedule_outlined,
                   label: 'Due 13:00 · 2 hours left',
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                AppPrimaryButton(
+                SizedBox(height: tokens.sectionGap / 2),
+                AppButton(
                   label: _jobStarted ? 'Job in progress' : 'Start job',
                   leadingIcon: Icons.play_arrow_rounded,
-                  size: AppButtonSize.lg,
                   onPressed: () {
                     setState(() => _jobStarted = true);
                     AppFeedback.toast(context, 'Job started');
@@ -107,27 +111,21 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: AppSpacing.sm,
-            crossAxisSpacing: AppSpacing.sm,
-            childAspectRatio: 1.35,
-            children: [
-              _FieldActionTile(
+          SizedBox(height: tokens.gap),
+          AppQuickActionGrid(
+            actions: [
+              AppQuickAction(
                 icon: Icons.near_me_outlined,
                 label: 'Navigate',
                 onTap: () => AppFeedback.toast(context, 'Opening maps (demo)'),
               ),
-              _FieldActionTile(
+              AppQuickAction(
                 icon: Icons.call_outlined,
                 label: 'Call office',
                 onTap: () =>
                     AppFeedback.toast(context, 'Calling dispatch (demo)'),
               ),
-              _FieldActionTile(
+              AppQuickAction(
                 icon: Icons.photo_camera_outlined,
                 label: _photoAttached ? 'Photo saved' : 'Capture photo',
                 onTap: () {
@@ -135,7 +133,7 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
                   AppFeedback.toast(context, 'Photo captured (demo)');
                 },
               ),
-              _FieldActionTile(
+              AppQuickAction(
                 icon: Icons.wifi_off_outlined,
                 label: 'Work offline',
                 onTap: () => AppFeedback.toast(
@@ -145,7 +143,7 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.xl),
+          SizedBox(height: tokens.sectionGap),
           AppDashboardSection(
             title: 'Up next',
             subtitle: 'Large cards. Tap to open the next site.',
@@ -162,7 +160,7 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
                     status: AppEntityStatus.pending,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                SizedBox(height: tokens.gap),
                 AppMobileDataCard(
                   title: 'Complaint follow-up',
                   entries: const {
@@ -181,6 +179,7 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
             title: 'Site notes',
             child: AppCard(
               elevated: false,
+              padding: EdgeInsets.all(tokens.cardPadding),
               child: Column(
                 children: [
                   AppTextArea(
@@ -196,11 +195,10 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
                     onChanged: (value) =>
                         setState(() => _photoAttached = value),
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppPrimaryButton(
+                  SizedBox(height: tokens.gap),
+                  AppButton(
                     label: 'Submit report',
                     leadingIcon: Icons.cloud_upload_outlined,
-                    size: AppButtonSize.lg,
                     onPressed: () =>
                         AppFeedback.toast(context, 'Report sent to office'),
                   ),
@@ -208,42 +206,8 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FieldActionTile extends StatelessWidget {
-  const _FieldActionTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      elevated: false,
-      onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 32, color: context.colors.primary),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: context.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
-          ),
+          SizedBox(height: tokens.sectionGap),
+          const AppWidgetCatalog(),
         ],
       ),
     );

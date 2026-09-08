@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/theme/app_design_tokens.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_ui_mode.dart';
 import '../../../core/extensions/context_extensions.dart';
 
 /// Common field chrome: label, helper, error, required marker.
@@ -35,6 +37,7 @@ class AppFieldFrame extends StatelessWidget {
                   label!,
                   style: context.textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w600,
+                    fontSize: AppDesignTokens.ofContext(context).labelSize,
                   ),
                 ),
               ),
@@ -95,6 +98,7 @@ class AppTextField extends StatelessWidget {
     this.autofillHints,
     this.onFieldSubmitted,
     this.inputFormatters,
+    this.mode,
   });
 
   final TextEditingController controller;
@@ -116,9 +120,11 @@ class AppTextField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
+  final AppUiMode? mode;
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppDesignTokens.of(resolveAppUiMode(context, mode));
     return AppFieldFrame(
       label: label,
       helperText: helperText,
@@ -137,11 +143,18 @@ class AppTextField extends StatelessWidget {
         autofillHints: autofillHints,
         onFieldSubmitted: onFieldSubmitted,
         inputFormatters: inputFormatters,
+        style: TextStyle(fontSize: tokens.bodySize),
         decoration: InputDecoration(
           hintText: hint,
-          prefixIcon: prefixIcon == null ? null : Icon(prefixIcon),
+          prefixIcon: prefixIcon == null
+              ? null
+              : Icon(prefixIcon, size: tokens.iconSize),
           suffixIcon: suffix,
           errorText: errorText,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: tokens.fieldPaddingH,
+            vertical: tokens.fieldPaddingV,
+          ),
         ),
       ),
     );
@@ -737,6 +750,107 @@ class AppMultiSelect<T> extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Numeric text field sharing [AppTextField] validation and chrome.
+class AppNumberField extends StatelessWidget {
+  const AppNumberField({
+    super.key,
+    required this.controller,
+    this.label,
+    this.hint,
+    this.helperText,
+    this.errorText,
+    this.required = false,
+    this.enabled = true,
+    this.readOnly = false,
+    this.mode,
+  });
+
+  final TextEditingController controller;
+  final String? label;
+  final String? hint;
+  final String? helperText;
+  final String? errorText;
+  final bool required;
+  final bool enabled;
+  final bool readOnly;
+  final AppUiMode? mode;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppTextField(
+      controller: controller,
+      label: label,
+      hint: hint,
+      helperText: helperText,
+      errorText: errorText,
+      required: required,
+      enabled: enabled,
+      readOnly: readOnly,
+      mode: mode,
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+    );
+  }
+}
+
+class FieldTextField extends StatelessWidget {
+  const FieldTextField({
+    super.key,
+    required this.controller,
+    this.label,
+    this.hint,
+    this.required = false,
+    this.prefixIcon,
+  });
+
+  final TextEditingController controller;
+  final String? label;
+  final String? hint;
+  final bool required;
+  final IconData? prefixIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppTextField(
+      mode: AppUiMode.field,
+      controller: controller,
+      label: label,
+      hint: hint,
+      required: required,
+      prefixIcon: prefixIcon,
+    );
+  }
+}
+
+class OfficeTextField extends StatelessWidget {
+  const OfficeTextField({
+    super.key,
+    required this.controller,
+    this.label,
+    this.hint,
+    this.required = false,
+    this.prefixIcon,
+  });
+
+  final TextEditingController controller;
+  final String? label;
+  final String? hint;
+  final bool required;
+  final IconData? prefixIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppTextField(
+      mode: AppUiMode.office,
+      controller: controller,
+      label: label,
+      hint: hint,
+      required: required,
+      prefixIcon: prefixIcon,
     );
   }
 }

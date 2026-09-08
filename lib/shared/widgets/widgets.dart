@@ -3,6 +3,7 @@
 /// Prefer widgets from this barrel over one-off Material styling in features.
 library;
 
+export 'base/app_ui_mode.dart';
 export 'buttons/app_buttons.dart';
 export 'cards/app_cards.dart';
 export 'dashboard/app_dashboard.dart';

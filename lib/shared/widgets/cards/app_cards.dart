@@ -499,6 +499,9 @@ enum AppEntityStatus {
   cancelled,
   draft,
   inProgress,
+  synced,
+  notSynced,
+  offline,
 }
 
 class AppStatusBadge extends StatelessWidget {
@@ -520,6 +523,9 @@ class AppStatusBadge extends StatelessWidget {
       AppEntityStatus.cancelled => ('Cancelled', AppStatusTone.error),
       AppEntityStatus.draft => ('Draft', AppStatusTone.neutral),
       AppEntityStatus.inProgress => ('In Progress', AppStatusTone.info),
+      AppEntityStatus.synced => ('Synced', AppStatusTone.success),
+      AppEntityStatus.notSynced => ('Not Synced', AppStatusTone.warning),
+      AppEntityStatus.offline => ('Offline', AppStatusTone.neutral),
     };
     return AppStatusChip(label: label, tone: tone, compact: compact);
   }
@@ -629,5 +635,23 @@ class AppKeyValueRow extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Priority chip with consistent semantic colours in both UI modes.
+class AppPriorityBadge extends StatelessWidget {
+  const AppPriorityBadge({super.key, required this.priority});
+
+  final String priority;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = switch (priority.toLowerCase()) {
+      'critical' => AppStatusTone.error,
+      'high' => AppStatusTone.warning,
+      'low' => AppStatusTone.neutral,
+      _ => AppStatusTone.info,
+    };
+    return AppStatusChip(label: priority, tone: tone);
   }
 }
