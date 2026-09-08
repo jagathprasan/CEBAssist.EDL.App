@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,8 +7,7 @@ import '../../../app/router/app_routes.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/extensions/context_extensions.dart';
-import '../../../core/widgets/app_confirmation_dialog.dart';
-import '../../../features/authentication/presentation/providers/auth_provider.dart';
+import '../../../features/shell/presentation/app_drawer.dart';
 import '../../../shared/providers/settings_provider.dart';
 import '../../../shared/providers/theme_mode_provider.dart';
 
@@ -145,6 +145,17 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
         ),
+        if (kDebugMode)
+          _SectionCard(
+            title: 'Developer',
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Widget showcase'),
+              subtitle: const Text('Design-system catalog (debug only)'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(AppRoutes.widgetShowcase),
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           child: Text(
@@ -156,28 +167,12 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
         FilledButton.tonalIcon(
-          onPressed: () => _logout(context, ref),
+          onPressed: () => confirmAndLogout(context, ref),
           icon: const Icon(Icons.logout_rounded),
           label: const Text('Logout'),
         ),
       ],
     );
-  }
-
-  Future<void> _logout(BuildContext context, WidgetRef ref) async {
-    final confirmed = await AppConfirmationDialog.show(
-      context,
-      title: 'Sign out?',
-      message:
-          'You will need to sign in again to access ${AppConstants.appName}.',
-      confirmLabel: 'Logout',
-      isDestructive: true,
-    );
-    if (!confirmed) return;
-    await ref.read(authProvider.notifier).logout();
-    if (context.mounted) {
-      context.go(AppRoutes.login);
-    }
   }
 
   Future<void> _openLegal(BuildContext context, String title, String body) {

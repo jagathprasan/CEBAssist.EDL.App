@@ -38,6 +38,7 @@ class AppMainBar extends ConsumerWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.only(right: AppSpacing.md, left: 4),
           child: AppUserAvatar(
             name: user.fullName,
+            imageUrl: user.avatarUrl,
             radius: 16,
             onTap: () => context.go(AppRoutes.profile),
           ),

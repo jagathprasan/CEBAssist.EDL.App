@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,6 +12,9 @@ import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/shell/presentation/app_shell.dart';
 import '../../features/splash/presentation/splash_screen.dart';
+import '../../features/workspaces/field_workspace_screen.dart';
+import '../../features/workspaces/office_workspace_screen.dart';
+import '../../shared/widgets/widget_showcase_page.dart';
 import 'app_routes.dart';
 
 /// Optional start path used by widget tests.
@@ -69,6 +72,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const DashboardScreen(),
           ),
           GoRoute(
+            path: AppRoutes.officeWorkspace,
+            builder: (context, state) => const OfficeWorkspaceScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.fieldWorkspace,
+            builder: (context, state) => const FieldWorkspaceScreen(),
+          ),
+          GoRoute(
             path: AppRoutes.notifications,
             builder: (context, state) => const NotificationsScreen(),
           ),
@@ -80,6 +91,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.settings,
             builder: (context, state) => const SettingsScreen(),
           ),
+          if (kDebugMode)
+            GoRoute(
+              path: AppRoutes.widgetShowcase,
+              builder: (context, state) => const WidgetShowcasePage(),
+            ),
           ..._placeholderRoutes,
         ],
       ),

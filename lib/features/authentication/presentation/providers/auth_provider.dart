@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/network/api_client.dart';
 import '../../../../core/services/local_storage_service.dart';
+import '../../../../core/services/secure_session_store.dart';
 import '../../../../shared/models/user_profile.dart';
-import '../../data/mock_auth_repository.dart';
+import '../../data/api_auth_repository.dart';
 import '../../domain/auth_repository.dart';
 
 /// When true, auth starts initialized so tests can skip the splash bootstrap.
@@ -19,10 +21,17 @@ final splashDelayProvider = Provider<Duration>((ref) {
   return const Duration(milliseconds: 1600);
 });
 
+final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+
+final secureSessionStoreProvider = Provider<SecureSessionStore>((ref) {
+  return SecureSessionStore();
+});
+
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return MockAuthRepository(
+  return ApiAuthRepository(
+    api: ref.watch(apiClientProvider),
+    sessionStore: ref.watch(secureSessionStoreProvider),
     storage: ref.watch(localStorageProvider),
-    networkDelay: ref.watch(simulatedNetworkDelayProvider),
   );
 });
 
@@ -76,7 +85,6 @@ class AuthNotifier extends Notifier<AuthState> {
 
   AuthRepository get _repository => ref.read(authRepositoryProvider);
 
-  /// Simulated startup check. Ready to be replaced with token validation.
   Future<void> initialize() async {
     if (state.isInitialized) return;
     try {
@@ -124,12 +132,69 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
-    await _repository.logout();
-    state = const AuthState(isInitialized: true);
+    try {
+      await _repository.logout();
+    } finally {
+      state = const AuthState(isInitialized: true);
+    }
   }
 
   Future<void> requestPasswordReset(String identifier) {
     return _repository.requestPasswordReset(identifier);
+  }
+
+  Future<bool> refreshProfile() async {
+    try {
+      final user = await _repository.refreshProfile();
+      state = state.copyWith(user: user, isAuthenticated: true);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> updateContact({
+    required String fullName,
+    required String email,
+    required String mobile,
+    required String landline,
+  }) async {
+    try {
+      final user = await _repository.updateContact(
+        fullName: fullName,
+        email: email,
+        mobile: mobile,
+        landline: landline,
+      );
+      state = state.copyWith(
+        user: user,
+        isAuthenticated: true,
+        clearError: true,
+      );
+      return true;
+    } catch (error) {
+      state = state.copyWith(errorMessage: error.toString());
+      return false;
+    }
+  }
+
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      await _repository.changePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      );
+      await logout();
+      return true;
+    } catch (error) {
+      state = state.copyWith(errorMessage: error.toString());
+      return false;
+    }
   }
 }
 

@@ -13,6 +13,8 @@ class AppShell extends StatelessWidget {
 
   static const _titles = {
     AppRoutes.dashboard: 'Dashboard',
+    AppRoutes.officeWorkspace: 'Office Workspace',
+    AppRoutes.fieldWorkspace: 'Field Workspace',
     AppRoutes.notifications: 'Notifications',
     AppRoutes.profile: 'Profile',
     AppRoutes.settings: 'Settings',

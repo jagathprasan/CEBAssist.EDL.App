@@ -6,6 +6,8 @@ class AppRoutes {
   static const String login = '/login';
   static const String forgotPassword = '/forgot-password';
   static const String dashboard = '/dashboard';
+  static const String officeWorkspace = '/workspaces/office';
+  static const String fieldWorkspace = '/workspaces/field';
   static const String notifications = '/notifications';
   static const String profile = '/profile';
   static const String settings = '/settings';
@@ -18,6 +20,8 @@ class AppRoutes {
   static const String inventory = '/inventory';
   static const String reports = '/reports';
 
+  static const String widgetShowcase = '/dev/widget-showcase';
+
   static const Set<String> publicRoutes = {splash, login, forgotPassword};
 
   static const Set<String> implementedRoutes = {
@@ -25,6 +29,8 @@ class AppRoutes {
     login,
     forgotPassword,
     dashboard,
+    officeWorkspace,
+    fieldWorkspace,
     notifications,
     profile,
     settings,
