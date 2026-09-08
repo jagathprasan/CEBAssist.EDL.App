@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
+import 'app_shadows.dart';
 import 'app_spacing.dart';
 
 /// Builds complete Material 3 [ThemeData] for light and dark modes.
@@ -226,13 +227,4 @@ class AppTheme {
 }
 
 /// Soft card elevation that stays readable in both themes.
-List<BoxShadow> appCardShadow(BuildContext context) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
-  return [
-    BoxShadow(
-      color: Colors.black.withValues(alpha: isDark ? 0.28 : 0.05),
-      blurRadius: 18,
-      offset: const Offset(0, 6),
-    ),
-  ];
-}
+List<BoxShadow> appCardShadow(BuildContext context) => AppShadows.md(context);

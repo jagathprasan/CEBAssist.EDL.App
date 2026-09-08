@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../app/router/app_routes.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/extensions/context_extensions.dart';
@@ -142,6 +145,17 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
         ),
+        if (kDebugMode)
+          _SectionCard(
+            title: 'Developer',
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Widget showcase'),
+              subtitle: const Text('Design-system catalog (debug only)'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(AppRoutes.widgetShowcase),
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           child: Text(

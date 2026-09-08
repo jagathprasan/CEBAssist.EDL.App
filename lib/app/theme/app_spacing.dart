@@ -11,6 +11,10 @@ class AppSpacing {
   static const double lg = 24;
   static const double xl = 32;
   static const double xxl = 40;
+  static const double xxxl = 56;
+
+  static const EdgeInsets pagePadding = EdgeInsets.all(md);
+  static const EdgeInsets pagePaddingWide = EdgeInsets.all(lg);
 }
 
 /// Corner radius tokens. Values stay between 12 and 20.

@@ -31,13 +31,13 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.text('Office Workspace'), findsWidgets);
-    expect(find.text('Data table'), findsOneWidget);
+    expect(find.text('Jobs'), findsOneWidget);
 
-    await scrollTo(tester, find.text('Trend chart'));
-    expect(find.text('Trend chart'), findsOneWidget);
+    await scrollTo(tester, find.text('Trend'));
+    expect(find.text('Trend'), findsOneWidget);
 
-    await scrollTo(tester, find.text('Calendar'));
-    expect(find.text('Calendar'), findsOneWidget);
+    await scrollTo(tester, find.text('Schedule'));
+    expect(find.text('Schedule'), findsOneWidget);
 
     await scrollTo(tester, find.text('Work form'));
     expect(find.text('Work form'), findsOneWidget);

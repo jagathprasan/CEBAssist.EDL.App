@@ -20,6 +20,8 @@ class AppRoutes {
   static const String inventory = '/inventory';
   static const String reports = '/reports';
 
+  static const String widgetShowcase = '/dev/widget-showcase';
+
   static const Set<String> publicRoutes = {splash, login, forgotPassword};
 
   static const Set<String> implementedRoutes = {
