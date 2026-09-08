@@ -13,6 +13,7 @@ class AppKpiCard extends StatelessWidget {
     this.deltaLabel,
     this.icon,
     this.iconColor,
+    this.trendColor,
     this.onTap,
   });
 
@@ -21,6 +22,7 @@ class AppKpiCard extends StatelessWidget {
   final String? deltaLabel;
   final IconData? icon;
   final Color? iconColor;
+  final Color? trendColor;
   final VoidCallback? onTap;
 
   @override
@@ -31,6 +33,7 @@ class AppKpiCard extends StatelessWidget {
       trendLabel: deltaLabel,
       icon: icon,
       iconColor: iconColor,
+      trendColor: trendColor,
       onTap: onTap,
     );
   }

@@ -45,12 +45,14 @@ class ProfileScreen extends ConsumerWidget {
                 label: 'Company',
                 value: user.companyId ?? AppConfig.companyName,
               ),
+              _ProfileField(label: 'Post', value: user.designation),
+              _ProfileField(label: 'User type', value: user.userType),
               _ProfileField(label: 'Username / PF', value: user.username ?? ''),
               _ProfileField(label: 'Employee ID', value: user.employeeId),
-              _ProfileField(label: 'Division', value: user.divisionId),
-              _ProfileField(label: 'Branch', value: user.branchId),
-              _ProfileField(label: 'Unit', value: user.unitId),
-              _ProfileField(label: 'Sub-unit', value: user.subUnitId),
+              _ProfileField(label: 'Division', value: user.divisionName),
+              _ProfileField(label: 'Branch', value: user.branchName),
+              _ProfileField(label: 'Unit', value: user.unitName),
+              _ProfileField(label: 'Sub-unit', value: user.subUnitName),
               _ProfileField(label: 'Office', value: user.office),
             ],
           ),
@@ -133,24 +135,18 @@ class _IdentityCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            user.fullName,
+            user.titleLine.isEmpty
+                ? user.fullName
+                : '${user.fullName} | ${user.titleLine}',
             textAlign: TextAlign.center,
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            user.titleLine,
-            textAlign: TextAlign.center,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-          if (user.username != null && user.username!.isNotEmpty) ...[
+          if (user.employeeId.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
-              user.username!,
+              user.employeeId,
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
@@ -204,7 +200,7 @@ class _ProfileField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final display = value.trim().isEmpty ? '—' : value;
+    final display = UserProfile.displayLabel(value);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),

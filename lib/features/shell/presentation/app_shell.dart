@@ -35,7 +35,7 @@ class AppShell extends StatelessWidget {
     // Phone-first drawer layout. A navigation rail can replace the drawer
     // here when tablet support is added (breakpoint around 1024px).
     return Scaffold(
-      appBar: AppMainBar(title: title),
+      appBar: AppMainBar(title: title, location: location),
       drawer: AppDrawer(currentLocation: location),
       body: child,
     );

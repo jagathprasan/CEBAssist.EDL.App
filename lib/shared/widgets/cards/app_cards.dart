@@ -111,6 +111,7 @@ class AppStatCard extends StatelessWidget {
     this.trendLabel,
     this.icon,
     this.iconColor,
+    this.trendColor,
     this.onTap,
   });
 
@@ -119,6 +120,7 @@ class AppStatCard extends StatelessWidget {
   final String? trendLabel;
   final IconData? icon;
   final Color? iconColor;
+  final Color? trendColor;
   final VoidCallback? onTap;
 
   @override
@@ -155,7 +157,7 @@ class AppStatCard extends StatelessWidget {
                   Text(
                     trendLabel!,
                     style: context.textTheme.bodySmall?.copyWith(
-                      color: context.semantic.success,
+                      color: trendColor ?? context.semantic.success,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

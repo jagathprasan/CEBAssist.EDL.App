@@ -62,144 +62,161 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 480),
-            child: SingleChildScrollView(
+            child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.lg,
-                AppSpacing.xl,
                 AppSpacing.lg,
                 AppSpacing.lg,
+                AppSpacing.md,
               ),
-              child: Form(
-                key: _formKey,
-                child: AutofillGroup(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Center(
-                        child: AppLogo(height: 64, style: AppLogoStyle.full),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        AppConstants.appFullName,
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-                      Text(
-                        'Welcome',
-                        style: context.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        'Sign in to your CEBAssist workspace',
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      if (auth.errorMessage != null) ...[
-                        _AuthErrorBanner(message: auth.errorMessage!),
-                        const SizedBox(height: AppSpacing.md),
-                      ],
-                      AppTextField(
-                        controller: _usernameController,
-                        label: 'Username',
-                        hint: 'Enter your username',
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        prefixIcon: Icons.person_outline,
-                        autofillHints: const [AutofillHints.username],
-                        autocorrect: false,
-                        enableSuggestions: false,
-                        validator: Validators.username,
-                        onChanged: (_) =>
-                            ref.read(authProvider.notifier).clearError(),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      AppTextField(
-                        controller: _passwordController,
-                        label: 'Password',
-                        hint: 'Enter your password',
-                        obscureText: _obscurePassword,
-                        textInputAction: TextInputAction.done,
-                        prefixIcon: Icons.lock_outline,
-                        autofillHints: const [AutofillHints.password],
-                        autocorrect: false,
-                        enableSuggestions: false,
-                        validator: Validators.password,
-                        onFieldSubmitted: (_) => _submit(),
-                        onChanged: (_) =>
-                            ref.read(authProvider.notifier).clearError(),
-                        suffix: IconButton(
-                          tooltip: _obscurePassword
-                              ? 'Show password'
-                              : 'Hide password',
-                          onPressed: () {
-                            setState(
-                              () => _obscurePassword = !_obscurePassword,
-                            );
-                          },
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
+                        child: AutofillGroup(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Center(
+                                child: AppLogo(
+                                  height: 56,
+                                  maxWidth: 280,
+                                  style: AppLogoStyle.full,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.sm),
+                              Text(
+                                AppConstants.companyLegalName,
+                                textAlign: TextAlign.center,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.xl),
+                              Text(
+                                'Welcome',
+                                style: context.textTheme.headlineSmall
+                                    ?.copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                'Sign in to your CEBAssist workspace',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.lg),
+                              if (auth.errorMessage != null) ...[
+                                _AuthErrorBanner(message: auth.errorMessage!),
+                                const SizedBox(height: AppSpacing.md),
+                              ],
+                              AppTextField(
+                                controller: _usernameController,
+                                label: 'Username',
+                                hint: 'Enter your username',
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                prefixIcon: Icons.person_outline,
+                                autofillHints: const [AutofillHints.username],
+                                autocorrect: false,
+                                enableSuggestions: false,
+                                validator: Validators.username,
+                                onChanged: (_) => ref
+                                    .read(authProvider.notifier)
+                                    .clearError(),
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              AppTextField(
+                                controller: _passwordController,
+                                label: 'Password',
+                                hint: 'Enter your password',
+                                obscureText: _obscurePassword,
+                                textInputAction: TextInputAction.done,
+                                prefixIcon: Icons.lock_outline,
+                                autofillHints: const [AutofillHints.password],
+                                autocorrect: false,
+                                enableSuggestions: false,
+                                validator: Validators.password,
+                                onFieldSubmitted: (_) => _submit(),
+                                onChanged: (_) => ref
+                                    .read(authProvider.notifier)
+                                    .clearError(),
+                                suffix: IconButton(
+                                  tooltip: _obscurePassword
+                                      ? 'Show password'
+                                      : 'Hide password',
+                                  onPressed: () {
+                                    setState(
+                                      () =>
+                                          _obscurePassword = !_obscurePassword,
+                                    );
+                                  },
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.sm),
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: _rememberMe,
+                                    onChanged: (value) {
+                                      setState(
+                                        () => _rememberMe = value ?? false,
+                                      );
+                                    },
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(
+                                          () => _rememberMe = !_rememberMe,
+                                        );
+                                      },
+                                      child: const Text('Remember me'),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        context.push(AppRoutes.forgotPassword),
+                                    child: const Text('Forgot password?'),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              AppPrimaryButton(
+                                label: 'Sign In',
+                                icon: Icons.login,
+                                isLoading: auth.isLoading,
+                                onPressed: _submit,
+                              ),
+                              const SizedBox(height: AppSpacing.lg),
+                              Text(
+                                'Need access? Contact your administrator',
+                                textAlign: TextAlign.center,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _rememberMe,
-                            onChanged: (value) {
-                              setState(() => _rememberMe = value ?? false);
-                            },
-                          ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() => _rememberMe = !_rememberMe);
-                              },
-                              child: const Text('Remember me'),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () =>
-                                context.push(AppRoutes.forgotPassword),
-                            child: const Text('Forgot password?'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      AppPrimaryButton(
-                        label: 'Sign In',
-                        icon: Icons.login,
-                        isLoading: auth.isLoading,
-                        onPressed: _submit,
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(
-                        'Need access? Contact your administrator',
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        'Version ${AppConstants.appVersion}',
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  Text(
+                    'Version ${AppConstants.appVersion}',
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

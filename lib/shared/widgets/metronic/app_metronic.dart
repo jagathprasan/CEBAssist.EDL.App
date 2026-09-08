@@ -105,41 +105,48 @@ class AppBreadcrumbItem {
 }
 
 class AppBreadcrumb extends StatelessWidget {
-  const AppBreadcrumb({super.key, required this.items});
+  const AppBreadcrumb({super.key, required this.items, this.compact = false});
 
   final List<AppBreadcrumbItem> items;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        for (var i = 0; i < items.length; i++) ...[
-          if (i > 0)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Icon(
-                Icons.chevron_right,
-                size: 16,
-                color: context.colors.onSurfaceVariant,
+    final style =
+        (compact ? context.textTheme.labelSmall : context.textTheme.labelLarge)
+            ?.copyWith(height: 1.1);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (var i = 0; i < items.length; i++) ...[
+            if (i > 0)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: compact ? 14 : 16,
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            InkWell(
+              onTap: items[i].onTap,
+              child: Text(
+                items[i].label,
+                style: style?.copyWith(
+                  fontWeight: i == items.length - 1
+                      ? FontWeight.w700
+                      : FontWeight.w500,
+                  color: i == items.length - 1
+                      ? context.colors.onSurface
+                      : context.colors.onSurfaceVariant,
+                ),
               ),
             ),
-          InkWell(
-            onTap: items[i].onTap,
-            child: Text(
-              items[i].label,
-              style: context.textTheme.labelLarge?.copyWith(
-                fontWeight: i == items.length - 1
-                    ? FontWeight.w700
-                    : FontWeight.w500,
-                color: i == items.length - 1
-                    ? context.colors.onSurface
-                    : context.colors.onSurfaceVariant,
-              ),
-            ),
-          ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

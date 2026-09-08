@@ -51,16 +51,31 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
   ];
 
   static const _columns = [
-    AppDataColumn(keyName: 'id', label: 'Job'),
+    AppDataColumn(keyName: 'job', label: 'Job'),
     AppDataColumn(keyName: 'area', label: 'Area'),
     AppDataColumn(keyName: 'status', label: 'Status'),
     AppDataColumn(keyName: 'eta', label: 'ETA'),
   ];
 
   static final _rows = [
-    {'id': 'EDL-1042', 'area': 'Unit A', 'status': 'Open', 'eta': '2h'},
-    {'id': 'EDL-1048', 'area': 'Unit C', 'status': 'In progress', 'eta': '4h'},
-    {'id': 'EDL-1051', 'area': 'Unit B', 'status': 'Waiting', 'eta': '1d'},
+    {
+      'job': 'Feeder inspection',
+      'area': 'Unit A',
+      'status': 'Open',
+      'eta': '2h',
+    },
+    {
+      'job': 'Meter replacement',
+      'area': 'Unit C',
+      'status': 'In progress',
+      'eta': '4h',
+    },
+    {
+      'job': 'Outage coordination',
+      'area': 'Unit B',
+      'status': 'Waiting',
+      'eta': '1d',
+    },
   ];
 
   late final List<WorkspaceCalendarEvent> _events;
@@ -91,7 +106,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
         date: today.add(const Duration(days: 1)),
         title: 'Meter replacement',
         timeLabel: '10:00',
-        subtitle: 'Account 038601 · booked with store',
+        subtitle: 'Account booked with store',
         location: 'Unit C',
         tone: AppStatusTone.success,
       ),
@@ -108,22 +123,22 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
       const AppFeedPost(
         title: 'Crew 3 started feeder inspection',
         timeLabel: '08:42',
-        subtitle: 'EDL-1042 · Unit A · GPS ping received',
-        author: 'Field',
+        subtitle: 'Unit A · GPS ping received',
+        author: 'Nimal Perera',
         tone: AppStatusTone.info,
       ),
       const AppFeedPost(
         title: 'Material request approved',
         timeLabel: '09:05',
         subtitle: '3 CT meters issued from store',
-        author: 'Store',
+        author: 'Store keeper',
         tone: AppStatusTone.success,
       ),
       const AppFeedPost(
         title: 'Complaint follow-up delayed',
         timeLabel: '09:18',
         subtitle: 'Waiting for consumer access at Unit B',
-        author: 'Office',
+        author: 'Dispatch',
         tone: AppStatusTone.warning,
       ),
     ];
@@ -159,20 +174,11 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
       child: AppScrollableColumn(
         padding: AppSpacing.pagePadding,
         children: [
-          AppBreadcrumb(
-            items: const [
-              AppBreadcrumbItem(label: 'Workspaces'),
-              AppBreadcrumbItem(label: 'Office'),
-              AppBreadcrumbItem(label: 'Dashboard'),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppPageHeader(title: widget.title, subtitle: widget.subtitle),
           AppAlert(
             variant: AppAlertVariant.info,
             title: 'Desk operations',
             message:
-                'Review assignments, track field posts, and clear delayed work from one dashboard.',
+                'Review assignments, track field updates, and clear delayed work from one dashboard.',
           ),
           SizedBox(height: gap),
           AppDashboardSection(
@@ -199,6 +205,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                         icon: Icons.warning_amber_outlined,
                         iconColor: context.semantic.warning,
                         deltaLabel: '2 overdue',
+                        trendColor: context.semantic.warning,
                       ),
                     ),
                   ],
@@ -223,6 +230,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                         icon: Icons.schedule_outlined,
                         iconColor: context.colors.error,
                         deltaLabel: 'Needs attention',
+                        trendColor: context.colors.error,
                       ),
                     ),
                   ],
@@ -244,7 +252,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                       size: 36,
                     ),
                     title: 'Outage coordination',
-                    subtitle: 'EDL-1051 · delayed consumer access',
+                    subtitle: 'Unit B · delayed consumer access',
                     trailing: const AppStatusBadge(
                       status: AppEntityStatus.delayed,
                     ),
@@ -257,7 +265,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                       size: 36,
                     ),
                     title: 'Meter replacement',
-                    subtitle: 'EDL-1048 · waiting store issue',
+                    subtitle: 'Unit C · waiting store issue',
                     trailing: const AppStatusBadge(
                       status: AppEntityStatus.inProgress,
                     ),
@@ -286,7 +294,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                   columns: _columns,
                   rows: filteredRows,
                   onRowTap: (row) =>
-                      AppFeedback.toast(context, 'Opened ${row['id']}'),
+                      AppFeedback.toast(context, 'Opened ${row['job']}'),
                 ),
               ],
             ),
