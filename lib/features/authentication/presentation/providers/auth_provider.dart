@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/network/api_client.dart';
 import '../../../../core/services/local_storage_service.dart';
+import '../../../../core/services/secure_session_store.dart';
 import '../../../../shared/models/user_profile.dart';
-import '../../data/mock_auth_repository.dart';
+import '../../data/api_auth_repository.dart';
 import '../../domain/auth_repository.dart';
 
 /// When true, auth starts initialized so tests can skip the splash bootstrap.
@@ -19,10 +21,17 @@ final splashDelayProvider = Provider<Duration>((ref) {
   return const Duration(milliseconds: 1600);
 });
 
+final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+
+final secureSessionStoreProvider = Provider<SecureSessionStore>((ref) {
+  return SecureSessionStore();
+});
+
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return MockAuthRepository(
+  return ApiAuthRepository(
+    api: ref.watch(apiClientProvider),
+    sessionStore: ref.watch(secureSessionStoreProvider),
     storage: ref.watch(localStorageProvider),
-    networkDelay: ref.watch(simulatedNetworkDelayProvider),
   );
 });
 
@@ -76,7 +85,6 @@ class AuthNotifier extends Notifier<AuthState> {
 
   AuthRepository get _repository => ref.read(authRepositoryProvider);
 
-  /// Simulated startup check. Ready to be replaced with token validation.
   Future<void> initialize() async {
     if (state.isInitialized) return;
     try {

@@ -8,6 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fake_auth_repository.dart';
+
 class TestApp {
   TestApp._();
 
@@ -21,6 +23,7 @@ class TestApp {
     GoogleFonts.config.allowRuntimeFetching = false;
     SharedPreferences.setMockInitialValues(prefs);
     final preferences = await SharedPreferences.getInstance();
+    final fakeAuth = FakeAuthRepository();
 
     final container = ProviderContainer(
       overrides: [
@@ -30,6 +33,7 @@ class TestApp {
         simulatedNetworkDelayProvider.overrideWithValue(Duration.zero),
         splashDelayProvider.overrideWithValue(Duration.zero),
         initialLocationProvider.overrideWithValue(initialLocation),
+        authRepositoryProvider.overrideWithValue(fakeAuth),
       ],
     );
     addTearDown(container.dispose);

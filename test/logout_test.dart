@@ -34,7 +34,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(container.read(authProvider).isAuthenticated, isFalse);
-    expect(find.text('Welcome back'), findsOneWidget);
+    expect(find.text('Welcome'), findsOneWidget);
     expect(find.text('Sign In'), findsOneWidget);
   });
 }

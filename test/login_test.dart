@@ -1,5 +1,4 @@
 import 'package:electricity_board_erp/app/router/app_routes.dart';
-import 'package:electricity_board_erp/core/constants/app_constants.dart';
 import 'package:electricity_board_erp/core/utils/validators.dart';
 import 'package:electricity_board_erp/features/authentication/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,18 +10,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Login validation', () {
-    test('rejects empty identifier and password', () {
-      expect(Validators.identifier(''), isNotNull);
-      expect(Validators.identifier('   '), isNotNull);
+    test('rejects empty username and password', () {
+      expect(Validators.username(''), isNotNull);
+      expect(Validators.username('   '), isNotNull);
       expect(Validators.password(''), isNotNull);
     });
 
-    test('rejects malformed email and accepts valid credentials format', () {
-      expect(Validators.identifier('not-an-email'), isNotNull);
-      expect(Validators.identifier(AppConstants.demoUsername), isNull);
-      expect(Validators.identifier('04207'), isNull);
-      expect(Validators.password('123'), isNotNull);
-      expect(Validators.password(AppConstants.demoPassword), isNull);
+    test('accepts CEBAssist usernames and rejects weak passwords', () {
+      expect(Validators.username('edl.user'), isNull);
+      expect(Validators.username('name@edl.la'), isNull);
+      expect(Validators.username('ab'), isNull);
+      expect(Validators.username('a'), isNotNull);
+      expect(Validators.password('1234'), isNotNull);
+      expect(Validators.password('SecurePass1'), isNull);
     });
 
     testWidgets('shows validation messages when submitting an empty form', (
@@ -37,10 +37,7 @@ void main() {
       await tester.tap(find.text('Sign In'));
       await tester.pump();
 
-      expect(
-        find.text('Please enter your employee ID or email.'),
-        findsOneWidget,
-      );
+      expect(find.text('Please enter your username.'), findsOneWidget);
       expect(find.text('Please enter your password.'), findsOneWidget);
     });
   });
@@ -59,14 +56,8 @@ void main() {
         initialLocation: AppRoutes.login,
       );
 
-      await tester.enterText(
-        find.byType(TextFormField).at(0),
-        AppConstants.demoUsername,
-      );
-      await tester.enterText(
-        find.byType(TextFormField).at(1),
-        AppConstants.demoPassword,
-      );
+      await tester.enterText(find.byType(TextFormField).at(0), 'edl.user');
+      await tester.enterText(find.byType(TextFormField).at(1), 'SecurePass1');
       await tester.tap(find.text('Sign In'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
@@ -92,10 +83,7 @@ void main() {
         initialLocation: AppRoutes.login,
       );
 
-      await tester.enterText(
-        find.byType(TextFormField).at(0),
-        'wrong@electricity.lk',
-      );
+      await tester.enterText(find.byType(TextFormField).at(0), 'wrong.user');
       await tester.enterText(find.byType(TextFormField).at(1), 'bad-password');
       await tester.tap(find.text('Sign In'));
       await tester.pump();

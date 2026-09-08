@@ -40,14 +40,27 @@ flutter run -d ios
 
 The debug banner is already disabled in application code.
 
-## Test credentials
+## Sign in
 
-| Field | Value |
-| --- | --- |
-| Username / email | `admin@electricity.lk` |
-| Password | `Admin@123` |
+This EDL app authenticates against the same CEBAssist staff directory as the web portal. Use your **Username** and **Password** — there are no demo accounts in the app.
 
-Employee ID `04207` is also accepted as the username.
+Local emulator (Android) talks to the aggregator through the external gateway at `http://10.0.2.2:8092`:
+
+```text
+POST /EDL/Login
+GET  /EDL/Me
+POST /EDL/Logout
+```
+
+Override the host for a device or production build:
+
+```bash
+flutter run --dart-define=API_BASE_URL=https://edl.cebassist.lk
+```
+
+Access tokens are stored in encrypted secure storage only when **Remember me** is checked. Passwords are never persisted.
+
+Sister company portals on the aggregator: `/NTNSP`, `/NSO`, `/EGL`.
 
 ## Useful commands
 
@@ -101,17 +114,15 @@ Update the paths in `lib/core/constants/app_constants.dart` if the filenames cha
 
 The product name is also defined in `AppConstants.appName`.
 
-## Replacing mock services with REST APIs
+## Connecting remaining mock services
 
-Keep the repository interfaces and swap the implementations:
+Authentication already uses the CEBAssist API aggregator (`ApiAuthRepository`). Dashboard and notifications are still mocked:
 
-| Concern | Interface | Current mock |
+| Concern | Interface | Implementation |
 | --- | --- | --- |
-| Auth | `lib/features/authentication/domain/auth_repository.dart` | `data/mock_auth_repository.dart` |
-| Dashboard | `lib/features/dashboard/domain/dashboard_models.dart` (`DashboardRepository`) | `data/mock_dashboard_repository.dart` |
-| Notifications | `lib/features/notifications/domain/notification_models.dart` (`NotificationRepository`) | `data/mock_notification_repository.dart` |
-
-Register the real implementations in the corresponding `*RepositoryProvider` files. UI and routing do not need to change.
+| Auth | `lib/features/authentication/domain/auth_repository.dart` | `data/api_auth_repository.dart` |
+| Dashboard | `lib/features/dashboard/domain/dashboard_models.dart` | `data/mock_dashboard_repository.dart` |
+| Notifications | `lib/features/notifications/domain/notification_models.dart` | `data/mock_notification_repository.dart` |
 
 ## First-stage screens
 

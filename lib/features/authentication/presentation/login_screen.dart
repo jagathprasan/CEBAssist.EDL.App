@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,14 +22,14 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _identifierController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _rememberMe = true;
+  bool _rememberMe = false;
 
   @override
   void dispose() {
-    _identifierController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -40,12 +41,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final success = await ref
         .read(authProvider.notifier)
         .login(
-          identifier: _identifierController.text,
+          identifier: _usernameController.text,
           password: _passwordController.text,
           rememberMe: _rememberMe,
         );
+    _passwordController.clear();
     if (!mounted) return;
     if (success) {
+      TextInput.finishAutofillContext();
       context.go(AppRoutes.dashboard);
     }
   }
@@ -73,7 +76,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const Center(
-                        child: AppLogo(height: 52, style: AppLogoStyle.full),
+                        child: AppLogo(height: 64, style: AppLogoStyle.full),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       Text(
@@ -85,14 +88,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       const SizedBox(height: AppSpacing.xl),
                       Text(
-                        'Welcome back',
+                        'Welcome',
                         style: context.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xs),
                       Text(
-                        'Sign in with your employee credentials to continue operations.',
+                        'Sign in to your CEBAssist workspace',
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: context.colors.onSurfaceVariant,
                         ),
@@ -103,14 +106,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const SizedBox(height: AppSpacing.md),
                       ],
                       AppTextField(
-                        controller: _identifierController,
-                        label: 'Employee ID or email',
-                        hint: 'name@electricity.lk',
-                        keyboardType: TextInputType.emailAddress,
+                        controller: _usernameController,
+                        label: 'Username',
+                        hint: 'Enter your username',
+                        keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
-                        prefixIcon: Icons.badge_outlined,
+                        prefixIcon: Icons.person_outline,
                         autofillHints: const [AutofillHints.username],
-                        validator: Validators.identifier,
+                        autocorrect: false,
+                        enableSuggestions: false,
+                        validator: Validators.username,
                         onChanged: (_) =>
                             ref.read(authProvider.notifier).clearError(),
                       ),
@@ -123,6 +128,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         textInputAction: TextInputAction.done,
                         prefixIcon: Icons.lock_outline,
                         autofillHints: const [AutofillHints.password],
+                        autocorrect: false,
+                        enableSuggestions: false,
                         validator: Validators.password,
                         onFieldSubmitted: (_) => _submit(),
                         onChanged: (_) =>
@@ -170,10 +177,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: AppSpacing.md),
                       AppPrimaryButton(
                         label: 'Sign In',
+                        icon: Icons.login,
                         isLoading: auth.isLoading,
                         onPressed: _submit,
                       ),
-                      const SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        'Need access? Contact your administrator',
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
                       Text(
                         'Version ${AppConstants.appVersion}',
                         textAlign: TextAlign.center,

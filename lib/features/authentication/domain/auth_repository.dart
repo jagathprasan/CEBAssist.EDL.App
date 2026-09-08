@@ -9,7 +9,7 @@ class AuthException implements Exception {
   String toString() => message;
 }
 
-/// Authentication contract. Replace [MockAuthRepository] with a REST client later.
+/// Authentication contract implemented by the CEBAssist aggregator client.
 abstract class AuthRepository {
   Future<UserProfile> login({
     required String identifier,

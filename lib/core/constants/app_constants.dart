@@ -9,7 +9,7 @@ class AppConstants {
   static const String appName = 'CEBAssist';
 
   /// Longer product description used in about copy and login.
-  static const String appFullName = 'Electricity Board ERP';
+  static const String appFullName = 'EDL · Electricity Board ERP';
 
   /// Short line displayed on the splash screen.
   static const String tagline = 'Powering Smarter Operations';
@@ -22,10 +22,6 @@ class AppConstants {
 
   /// Wordmark-only logo (`logo.png`).
   static const String logoWordmarkAsset = 'assets/images/logo.png';
-
-  /// Temporary mock credentials used until REST authentication is wired.
-  static const String demoUsername = 'admin@electricity.lk';
-  static const String demoPassword = 'Admin@123';
 
   static const String themeModeKey = 'theme_mode';
   static const String rememberSessionKey = 'remember_session';

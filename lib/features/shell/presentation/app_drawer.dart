@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/app_routes.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/widgets/app_confirmation_dialog.dart';
@@ -124,17 +125,20 @@ class AppDrawer extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              user.designation,
+                              user.designation.isEmpty
+                                  ? AppConfig.companyName
+                                  : user.designation,
                               style: context.textTheme.bodySmall?.copyWith(
                                 color: context.colors.onSurfaceVariant,
                               ),
                             ),
-                            Text(
-                              'Employee ID ${user.employeeId}',
-                              style: context.textTheme.labelSmall?.copyWith(
-                                color: context.colors.onSurfaceVariant,
+                            if (user.employeeId.isNotEmpty)
+                              Text(
+                                'Employee ID ${user.employeeId}',
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
