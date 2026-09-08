@@ -181,6 +181,25 @@ class _WidgetShowcasePageState extends State<WidgetShowcasePage> {
             ),
             const SizedBox(height: AppSpacing.sm),
             const AppProgressSummary(title: 'Completion', progress: 0.7),
+            const AppDivider(),
+            const AppSectionHeader(title: 'Calendar & posts'),
+            AppCalendar(
+              events: [
+                AppCalendarEvent(
+                  date: DateTime.now(),
+                  title: 'Team briefing',
+                  timeLabel: '08:30',
+                  location: 'Area office',
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            const AppFeedPost(
+              title: 'Crew started feeder inspection',
+              timeLabel: '08:42',
+              subtitle: 'EDL-1042 · Unit A',
+              author: 'Field',
+            ),
             const SizedBox(height: AppSpacing.xxl),
           ],
         ),

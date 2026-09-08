@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_spacing.dart';
+import '../../core/extensions/context_extensions.dart';
+import '../../core/widgets/app_status_chip.dart';
 import '../../shared/widgets/widgets.dart';
 import 'workspace_kit.dart';
 
-/// Office/Field demo surface built on the shared design-system widgets.
-/// Mode density still comes from [WorkspaceScope].
+/// Office dashboard built from the Metronic-aligned shared widget kit.
 class WorkspaceShowcase extends StatefulWidget {
   const WorkspaceShowcase({
     super.key,
@@ -31,7 +32,6 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
   bool _notifyOffice = true;
   bool _attachPhotos = false;
   String _search = '';
-  Set<String> _viewModes = {'List'};
 
   static const _linePoints = [
     WorkspaceChartPoint(label: 'Mon', value: 12),
@@ -50,12 +50,6 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
     WorkspaceChartPoint(label: 'West', value: 22),
   ];
 
-  static const _donutPoints = [
-    WorkspaceChartPoint(label: 'Open', value: 24),
-    WorkspaceChartPoint(label: 'In progress', value: 16),
-    WorkspaceChartPoint(label: 'Closed', value: 48),
-  ];
-
   static const _columns = [
     AppDataColumn(keyName: 'id', label: 'Job'),
     AppDataColumn(keyName: 'area', label: 'Area'),
@@ -70,6 +64,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
   ];
 
   late final List<WorkspaceCalendarEvent> _events;
+  late final List<AppFeedPost> _posts;
 
   @override
   void initState() {
@@ -80,21 +75,56 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
         date: today,
         title: 'Team briefing',
         timeLabel: '08:30',
+        subtitle: 'Dispatch desk · daily assignments',
+        location: 'Area office',
+        tone: AppStatusTone.info,
       ),
       WorkspaceCalendarEvent(
         date: today,
         title: 'Site inspection',
         timeLabel: '13:00',
+        subtitle: 'Feeder walk-down with crew 3',
+        location: 'Unit A',
+        tone: AppStatusTone.warning,
       ),
       WorkspaceCalendarEvent(
         date: today.add(const Duration(days: 1)),
         title: 'Meter replacement',
         timeLabel: '10:00',
+        subtitle: 'Account 038601 · booked with store',
+        location: 'Unit C',
+        tone: AppStatusTone.success,
       ),
       WorkspaceCalendarEvent(
         date: today.add(const Duration(days: 3)),
         title: 'Outage coordination',
         timeLabel: '09:15',
+        subtitle: 'Planned switching with NSO',
+        location: 'Unit B',
+        tone: AppStatusTone.error,
+      ),
+    ];
+    _posts = [
+      const AppFeedPost(
+        title: 'Crew 3 started feeder inspection',
+        timeLabel: '08:42',
+        subtitle: 'EDL-1042 · Unit A · GPS ping received',
+        author: 'Field',
+        tone: AppStatusTone.info,
+      ),
+      const AppFeedPost(
+        title: 'Material request approved',
+        timeLabel: '09:05',
+        subtitle: '3 CT meters issued from store',
+        author: 'Store',
+        tone: AppStatusTone.success,
+      ),
+      const AppFeedPost(
+        title: 'Complaint follow-up delayed',
+        timeLabel: '09:18',
+        subtitle: 'Waiting for consumer access at Unit B',
+        author: 'Office',
+        tone: AppStatusTone.warning,
       ),
     ];
   }
@@ -109,8 +139,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
 
   @override
   Widget build(BuildContext context) {
-    final metrics = WorkspaceScope.metricsOf(context);
-    final gap = metrics.gap;
+    final gap = AppSpacing.md;
     final filteredRows = _rows.where((row) {
       final matchesFilter = _filter == 'All' || row['status'] == _filter;
       final matchesSearch =
@@ -128,125 +157,110 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
         AppFeedback.toast(context, 'Workspace refreshed');
       },
       child: AppScrollableColumn(
-        padding: EdgeInsets.all(
-          metrics.isField ? AppSpacing.lg : AppSpacing.md,
-        ),
+        padding: AppSpacing.pagePadding,
         children: [
+          AppBreadcrumb(
+            items: const [
+              AppBreadcrumbItem(label: 'Workspaces'),
+              AppBreadcrumbItem(label: 'Office'),
+              AppBreadcrumbItem(label: 'Dashboard'),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
           AppPageHeader(title: widget.title, subtitle: widget.subtitle),
-          AppInfoCard(
-            title: metrics.isField ? 'Field mode' : 'Office mode',
-            message: metrics.isField
-                ? 'Larger type and controls for outdoor use. Built with shared design-system widgets.'
-                : 'Denser layout for desk work. Built with the same shared widgets as Field.',
+          AppAlert(
+            variant: AppAlertVariant.info,
+            title: 'Desk operations',
+            message:
+                'Review assignments, track field posts, and clear delayed work from one dashboard.',
           ),
           SizedBox(height: gap),
           AppDashboardSection(
             title: 'Key metrics',
-            child: metrics.isField
-                ? Column(
-                    children: [
-                      AppMetricCard(
-                        label: 'Jobs today',
-                        value: '6',
-                        icon: Icons.engineering_outlined,
-                      ),
-                      SizedBox(height: gap),
-                      AppMetricCard(
-                        label: 'Completed',
-                        value: '2',
-                        icon: Icons.task_alt_outlined,
-                      ),
-                    ],
-                  )
-                : Row(
-                    children: [
-                      const Expanded(
-                        child: AppKpiCard(
-                          label: 'Open tickets',
-                          value: '24',
-                          icon: Icons.assignment_outlined,
-                          deltaLabel: '+3 today',
-                        ),
-                      ),
-                      SizedBox(width: gap),
-                      const Expanded(
-                        child: AppKpiCard(
-                          label: 'In review',
-                          value: '8',
-                          icon: Icons.fact_check_outlined,
-                          deltaLabel: '2 urgent',
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-          AppDashboardSection(
-            title: 'Quick actions',
+            subtitle: 'Live operational snapshot',
             child: Column(
               children: [
-                AppPrimaryButton(
-                  label: metrics.isField ? 'Start job' : 'Review assignments',
-                  leadingIcon: metrics.isField
-                      ? Icons.play_arrow_rounded
-                      : Icons.inbox_outlined,
-                  onPressed: () =>
-                      AppFeedback.toast(context, 'Primary action (demo)'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppKpiCard(
+                        label: 'Active jobs',
+                        value: '24',
+                        icon: Icons.assignment_outlined,
+                        iconColor: context.colors.primary,
+                        deltaLabel: '+3 today',
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: AppKpiCard(
+                        label: 'At risk',
+                        value: '5',
+                        icon: Icons.warning_amber_outlined,
+                        iconColor: context.semantic.warning,
+                        deltaLabel: '2 overdue',
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: gap / 2),
-                AppSecondaryButton(
-                  label: metrics.isField ? 'Report issue' : 'Approve requests',
-                  leadingIcon: metrics.isField
-                      ? Icons.report_outlined
-                      : Icons.done_all_outlined,
-                  onPressed: () {},
-                ),
-                SizedBox(height: gap / 2),
-                AppOutlineButton(
-                  label: metrics.isField ? 'Call office' : 'Export summary',
-                  leadingIcon: metrics.isField
-                      ? Icons.call_outlined
-                      : Icons.file_download_outlined,
-                  onPressed: () {},
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppKpiCard(
+                        label: 'Completed',
+                        value: '18',
+                        icon: Icons.task_alt_outlined,
+                        iconColor: context.semantic.success,
+                        deltaLabel: '75% of plan',
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: AppKpiCard(
+                        label: 'Delayed',
+                        value: '3',
+                        icon: Icons.schedule_outlined,
+                        iconColor: context.colors.error,
+                        deltaLabel: 'Needs attention',
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
           AppDashboardSection(
-            title: 'Search & filters',
+            title: 'Attention needed',
+            subtitle: 'Items that should be cleared from the desk today',
             child: AppCard(
+              elevated: false,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AppSearchField(
-                    controller: _searchController,
-                    hint: 'Search jobs, areas, accounts',
-                    onChanged: (value) => setState(() => _search = value),
+                  AppListTile(
+                    leading: AppIconBox(
+                      icon: Icons.warning_amber_outlined,
+                      color: context.semantic.warning,
+                      size: 36,
+                    ),
+                    title: 'Outage coordination',
+                    subtitle: 'EDL-1051 · delayed consumer access',
+                    trailing: const AppStatusBadge(
+                      status: AppEntityStatus.delayed,
+                    ),
                   ),
-                  SizedBox(height: gap),
-                  Wrap(
-                    spacing: AppSpacing.xs,
-                    runSpacing: AppSpacing.xs,
-                    children: [
-                      for (final option in const [
-                        'All',
-                        'Open',
-                        'In progress',
-                        'Waiting',
-                      ])
-                        AppChip(
-                          label: option,
-                          selected: _filter == option,
-                          onSelected: (_) => setState(() => _filter = option),
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: gap),
-                  AppMultiSelect<String>(
-                    label: 'View',
-                    options: const ['List', 'Board', 'Map'],
-                    labels: const ['List', 'Board', 'Map'],
-                    selected: _viewModes,
-                    onChanged: (value) => setState(() => _viewModes = value),
+                  const AppDivider(height: AppSpacing.md),
+                  AppListTile(
+                    leading: AppIconBox(
+                      icon: Icons.hourglass_bottom,
+                      color: context.colors.primary,
+                      size: 36,
+                    ),
+                    title: 'Meter replacement',
+                    subtitle: 'EDL-1048 · waiting store issue',
+                    trailing: const AppStatusBadge(
+                      status: AppEntityStatus.inProgress,
+                    ),
                   ),
                 ],
               ),
@@ -254,41 +268,69 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
           ),
           AppDashboardSection(
             title: 'Jobs',
-            child: AppAdaptiveDataTable(
-              columns: _columns,
-              rows: filteredRows,
-              onRowTap: (row) =>
-                  AppFeedback.toast(context, 'Opened ${row['id']}'),
+            child: Column(
+              children: [
+                AppSearchField(
+                  controller: _searchController,
+                  hint: 'Search jobs, areas, accounts',
+                  onChanged: (value) => setState(() => _search = value),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                AppToggleGroup(
+                  options: const ['All', 'Open', 'In progress', 'Waiting'],
+                  selected: _filter,
+                  onChanged: (value) => setState(() => _filter = value),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                AppAdaptiveDataTable(
+                  columns: _columns,
+                  rows: filteredRows,
+                  onRowTap: (row) =>
+                      AppFeedback.toast(context, 'Opened ${row['id']}'),
+                ),
+              ],
             ),
           ),
           AppDashboardSection(
-            title: 'Status board',
-            child: AppCard(
-              child: Column(
-                children: [
-                  AppListTile(
-                    title: 'Feeder inspection',
-                    subtitle: 'Unit A · assigned to crew 3',
-                    trailing: const AppStatusBadge(
-                      status: AppEntityStatus.pending,
-                    ),
-                  ),
-                  AppListTile(
-                    title: 'Meter replacement',
-                    subtitle: 'Unit C · parts confirmed',
-                    trailing: const AppStatusBadge(
-                      status: AppEntityStatus.inProgress,
-                    ),
-                  ),
-                  AppListTile(
-                    title: 'Complaint follow-up',
-                    subtitle: 'Closed by supervisor',
-                    trailing: const AppStatusBadge(
-                      status: AppEntityStatus.completed,
-                    ),
-                  ),
+            title: 'Status distribution',
+            child: AppStatusDistribution(
+              slices: [
+                AppStatusSlice(
+                  label: 'Open',
+                  count: 24,
+                  color: context.colors.primary,
+                ),
+                AppStatusSlice(
+                  label: 'In progress',
+                  count: 16,
+                  color: context.semantic.warning,
+                ),
+                AppStatusSlice(
+                  label: 'Closed',
+                  count: 48,
+                  color: context.semantic.success,
+                ),
+              ],
+            ),
+          ),
+          AppDashboardSection(
+            title: 'Posts',
+            subtitle: 'Live field and office updates',
+            child: Column(
+              children: [
+                for (final post in _posts) ...[
+                  post,
+                  const SizedBox(height: AppSpacing.sm),
                 ],
-              ),
+              ],
+            ),
+          ),
+          AppDashboardSection(
+            title: 'Schedule',
+            subtitle: 'Select a day to view calendar posts',
+            child: AppCard(
+              elevated: false,
+              child: WorkspaceCalendar(events: _events),
             ),
           ),
           AppDashboardSection(
@@ -304,52 +346,20 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                   title: 'Area workload',
                   child: const WorkspaceBarChart(points: _barPoints),
                 ),
-                SizedBox(height: gap),
-                AppChartContainer(
-                  title: 'Job mix',
-                  child: const WorkspaceDonutChart(
-                    segments: _donutPoints,
-                    centerLabel: '88\njobs',
-                  ),
-                ),
               ],
             ),
-          ),
-          AppDashboardSection(
-            title: 'Progress',
-            child: Column(
-              children: [
-                AppProgressSummary(
-                  title: 'Daily completion',
-                  progress: 0.62,
-                  caption: '12 of 19 planned tasks finished',
-                ),
-                SizedBox(height: gap),
-                AppProgressSummary(
-                  title: 'Material requests',
-                  progress: 0.35,
-                  caption: 'Awaiting store issue for 3 items',
-                ),
-                SizedBox(height: gap),
-                AppStatusDistribution(
-                  slices: const [
-                    AppStatusSlice(label: 'Open', count: 24),
-                    AppStatusSlice(label: 'In progress', count: 16),
-                    AppStatusSlice(label: 'Closed', count: 48),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          AppDashboardSection(
-            title: 'Schedule',
-            child: AppCard(child: WorkspaceCalendar(events: _events)),
           ),
           AppDashboardSection(
             title: 'Work form',
             child: AppCard(
+              elevated: false,
               child: Column(
                 children: [
+                  AppStepper(
+                    steps: const ['Details', 'Assign', 'Confirm'],
+                    currentStep: 0,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
                   AppTextField(
                     controller: _accountController,
                     label: 'Account / location',
@@ -385,8 +395,6 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                     controller: _notesController,
                     label: 'Notes',
                     hint: 'Add observations or instructions',
-                    minLines: metrics.isField ? 4 : 3,
-                    maxLines: metrics.isField ? 6 : 5,
                   ),
                   AppCheckbox(
                     label: 'Attach site photos',
@@ -409,11 +417,6 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                 ],
               ),
             ),
-          ),
-          AppInfoCard(
-            title: 'Shared component kit',
-            message:
-                'Office and Field now compose screens from lib/shared/widgets. Charts and calendar remain workspace-specific; density still follows WorkspaceMode.',
           ),
           SizedBox(height: gap * 2),
         ],

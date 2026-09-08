@@ -110,6 +110,7 @@ class AppStatCard extends StatelessWidget {
     required this.value,
     this.trendLabel,
     this.icon,
+    this.iconColor,
     this.onTap,
   });
 
@@ -117,49 +118,81 @@ class AppStatCard extends StatelessWidget {
   final String value;
   final String? trendLabel;
   final IconData? icon;
+  final Color? iconColor;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final accent = iconColor ?? context.colors.primary;
     return AppCard(
       onTap: onTap,
-      child: Column(
+      elevated: false,
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   label,
                   style: context.textTheme.labelLarge?.copyWith(
                     color: context.colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              if (icon != null) Icon(icon, size: AppSizes.iconSm),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            value,
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  value,
+                  style: context.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                if (trendLabel != null) ...[
+                  const SizedBox(height: AppSpacing.xxs),
+                  Text(
+                    trendLabel!,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.semantic.success,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          if (trendLabel != null) ...[
-            const SizedBox(height: AppSpacing.xxs),
-            Text(
-              trendLabel!,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.semantic.success,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+          if (icon != null) AppIconBox(icon: icon!, color: accent),
         ],
       ),
+    );
+  }
+}
+
+/// Metronic-style tinted square icon used on KPI cards.
+class AppIconBox extends StatelessWidget {
+  const AppIconBox({
+    super.key,
+    required this.icon,
+    required this.color,
+    this.size = 44,
+  });
+
+  final IconData icon;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: context.isDark ? 0.22 : 0.12),
+        borderRadius: AppRadius.borderXs,
+      ),
+      child: Icon(icon, color: color, size: size * 0.48),
     );
   }
 }
@@ -496,11 +529,15 @@ class AppProgressBar extends StatelessWidget {
     required this.value,
     this.label,
     this.height = AppSizes.progressMd,
+    this.color,
+    this.trackColor,
   });
 
   final double value;
   final String? label;
   final double height;
+  final Color? color;
+  final Color? trackColor;
 
   @override
   Widget build(BuildContext context) {
@@ -516,6 +553,8 @@ class AppProgressBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: value.clamp(0, 1),
             minHeight: height,
+            color: color,
+            backgroundColor: trackColor ?? context.colors.surfaceContainerHigh,
           ),
         ),
       ],

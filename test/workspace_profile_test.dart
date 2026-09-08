@@ -33,8 +33,8 @@ void main() {
     expect(find.text('Office Workspace'), findsWidgets);
     expect(find.text('Jobs'), findsOneWidget);
 
-    await scrollTo(tester, find.text('Trend'));
-    expect(find.text('Trend'), findsOneWidget);
+    await scrollTo(tester, find.text('Posts'));
+    expect(find.text('Posts'), findsOneWidget);
 
     await scrollTo(tester, find.text('Schedule'));
     expect(find.text('Schedule'), findsOneWidget);
@@ -43,7 +43,9 @@ void main() {
     expect(find.text('Work form'), findsOneWidget);
   });
 
-  testWidgets('field workspace shows large shared kit sections', (tester) async {
+  testWidgets('field workspace shows large shared kit sections', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1080, 3200);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -59,10 +61,13 @@ void main() {
     expect(find.text('Field Workspace'), findsWidgets);
     expect(find.text('Start job'), findsOneWidget);
 
-    await scrollTo(tester, find.text('Area workload'));
-    expect(find.text('Area workload'), findsOneWidget);
+    await scrollTo(tester, find.text('Navigate'));
+    expect(find.text('Navigate'), findsOneWidget);
 
-    await scrollTo(tester, find.text('Save work record'));
-    expect(find.text('Save work record'), findsOneWidget);
+    await scrollTo(tester, find.text("Today's posts"));
+    expect(find.text("Today's posts"), findsOneWidget);
+
+    await scrollTo(tester, find.text('Submit report'));
+    expect(find.text('Submit report'), findsOneWidget);
   });
 }

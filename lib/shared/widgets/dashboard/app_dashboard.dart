@@ -12,6 +12,7 @@ class AppKpiCard extends StatelessWidget {
     required this.value,
     this.deltaLabel,
     this.icon,
+    this.iconColor,
     this.onTap,
   });
 
@@ -19,6 +20,7 @@ class AppKpiCard extends StatelessWidget {
   final String value;
   final String? deltaLabel;
   final IconData? icon;
+  final Color? iconColor;
   final VoidCallback? onTap;
 
   @override
@@ -28,6 +30,7 @@ class AppKpiCard extends StatelessWidget {
       value: value,
       trendLabel: deltaLabel,
       icon: icon,
+      iconColor: iconColor,
       onTap: onTap,
     );
   }
@@ -256,12 +259,29 @@ class AppStatusDistribution extends StatelessWidget {
           for (final slice in slices) ...[
             Row(
               children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: slice.color ?? context.colors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.xs),
                 Expanded(child: Text(slice.label)),
-                Text('${slice.count}'),
+                Text(
+                  '${slice.count}',
+                  style: context.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.xxs),
-            AppProgressBar(value: total == 0 ? 0 : slice.count / total),
+            AppProgressBar(
+              value: total == 0 ? 0 : slice.count / total,
+              color: slice.color,
+            ),
             const SizedBox(height: AppSpacing.sm),
           ],
         ],

@@ -68,12 +68,54 @@ Do **not** hard-code colours, spacing, radii, or durations in pages.
 - Paginated / searchable lists, expandable items
 - `AppAdaptiveDataTable` (cards on compact screens)
 - Timeline, activity, notification, user, attachment items
+- `AppCalendar` / `AppFeedPost` (agenda posts with time chips)
 - Sort/filter bottom sheet helper
 
 ### Dashboard (`dashboard/`)
 
-- KPI/metric cards, quick-action grid, activity/notification/progress summaries
-- Status distribution, chart container, dashboard section + skeleton
+- KPI/metric cards with Metronic icon boxes
+- Quick-action grid, activity/notification/progress summaries
+- Status distribution (per-slice colours), chart container, dashboard section + skeleton
+
+### Metronic parity (`metronic/`)
+
+Mapped from `CEBAssist.CoreBilling.Web.Frontend/src/components/ui`:
+
+| Web | Flutter |
+| --- | --- |
+| `alert` | `AppAlert` |
+| `badge` | `AppStatusBadge` / `AppChip` |
+| `breadcrumb` | `AppBreadcrumb` |
+| `button` | `AppPrimaryButton` and variants |
+| `calendar` | `AppCalendar` |
+| `card` | `AppCard` |
+| `accordion` | `AppAccordion` |
+| `stepper` | `AppStepper` |
+| `tabs` | `AppTabBar` |
+| `dialog` / `alert-dialog` | `AppFeedback` / `showAppConfirmDelete` |
+| `sheet` / `drawer` | `showAppBottomSheet` / `AppDrawer` |
+| `input` / `textarea` / `select` | `AppTextField` / `AppTextArea` / `AppDropdown` |
+| `checkbox` / `switch` / `radio-group` | `AppCheckbox` / `AppSwitch` / `AppRadioGroup` |
+| `progress` / `slider` | `AppProgressBar` / `AppSlider` |
+| `skeleton` | `AppSkeletonLoader` |
+| `sonner` / toast | `AppFeedback.toast` |
+| `pagination` | `AppPaginationControls` |
+| `table` / `data-grid` | `AppAdaptiveDataTable` |
+| `kanban` | `AppKanbanColumn` |
+| `avatar` / `avatar-group` | `AppAvatar` / `AppAvatarGroup` |
+| `tooltip` / `hover-card` | `AppTooltip` / `AppHoverCard` |
+| `toggle` / `toggle-group` | `AppToggle` / `AppToggleGroup` |
+| `kbd` / `code` | `AppKbd` / `AppCode` |
+| `separator` | `AppSeparator` |
+| `carousel` | `AppCarousel` |
+| `tree` | `AppTree` |
+| `command` | `AppCommandSheet` |
+| `counting-number` | `AppCountingNumber` |
+| `file-upload` | `AppFilePicker` / `AppImagePicker` |
+| `input-otp` | `AppOtpInput` |
+| `date-picker` | `AppDatePickerField` |
+
+Decorative web-only effects (marquee, particle background, GitHub button, typing animations) are omitted on mobile.
 
 ## Usage example
 
