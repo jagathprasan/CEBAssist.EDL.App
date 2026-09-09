@@ -17,15 +17,15 @@ class AppSpacing {
   static const EdgeInsets pagePaddingWide = EdgeInsets.all(lg);
 }
 
-/// Corner radius tokens aligned with the Office dashboard mock (12–16 cards).
+/// Corner radius tokens: generous rounding for cards, maps, and sheets.
 class AppRadius {
   AppRadius._();
 
-  static const double xs = 10;
-  static const double sm = 12;
-  static const double md = 16;
-  static const double lg = 20;
-  static const double xl = 24;
+  static const double xs = 12;
+  static const double sm = 16;
+  static const double md = 20;
+  static const double lg = 24;
+  static const double xl = 28;
   static const double pill = 999;
 
   static const BorderRadius borderXs = BorderRadius.all(Radius.circular(xs));

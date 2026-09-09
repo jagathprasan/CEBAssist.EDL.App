@@ -134,37 +134,46 @@ class AppStatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  label,
-                  style: context.textTheme.labelLarge?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
               if (icon != null)
                 AppIconBox(icon: icon!, color: accent, size: 40),
+              const Spacer(),
+              Icon(
+                Icons.show_chart_rounded,
+                size: 20,
+                color: trendColor ?? accent,
+              ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.md),
           Text(
             value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: context.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w800,
+              letterSpacing: -0.8,
               height: 1.05,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xxs),
+          Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
             ),
           ),
           if (trendLabel != null) ...[
             const SizedBox(height: AppSpacing.xs),
             Text(
               trendLabel!,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: trendColor ?? context.semantic.success,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: trendColor ?? accent,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -195,7 +204,7 @@ class AppIconBox extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: color.withValues(alpha: context.isDark ? 0.22 : 0.12),
-        borderRadius: AppRadius.borderXs,
+        borderRadius: AppRadius.borderSm,
       ),
       child: Icon(icon, color: color, size: size * 0.48),
     );

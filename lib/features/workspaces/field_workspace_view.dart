@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_breakpoints.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../core/extensions/context_extensions.dart';
+import '../../shared/data/edl_network_sites.dart';
 import '../../shared/widgets/widgets.dart';
 import '../../showcase/app_widget_catalog.dart';
 
@@ -27,6 +29,7 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
   @override
   Widget build(BuildContext context) {
     final tokens = AppDesignTokens.ofContext(context);
+    final tablet = !AppBreakpoints.isCompact(MediaQuery.sizeOf(context).width);
     return AppRefreshIndicator(
       onRefresh: () async {
         await Future<void>.delayed(const Duration(milliseconds: 500));
@@ -112,7 +115,24 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
             ),
           ),
           SizedBox(height: tokens.gap),
+          AppDashboardSection(
+            title: 'Job map',
+            subtitle: 'Your current site and next stops',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppMap(
+                  height: tablet ? 320 : 260,
+                  center: EdlNetworkSites.colombo,
+                  markers: EdlNetworkSites.field,
+                ),
+                SizedBox(height: tokens.gap / 2),
+                AppMapLegend(markers: EdlNetworkSites.field),
+              ],
+            ),
+          ),
           AppQuickActionGrid(
+            crossAxisCount: tablet ? 4 : 2,
             actions: [
               AppQuickAction(
                 icon: Icons.near_me_outlined,

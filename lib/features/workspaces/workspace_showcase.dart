@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_breakpoints.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../core/extensions/context_extensions.dart';
 import '../../core/widgets/app_status_chip.dart';
+import '../../shared/data/edl_network_sites.dart';
 import '../../shared/widgets/widgets.dart';
 import '../../showcase/app_widget_catalog.dart';
 import 'workspace_kit.dart';
@@ -158,6 +160,82 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
       return matchesFilter && matchesSearch;
     }).toList();
 
+    final tablet = !AppBreakpoints.isCompact(MediaQuery.sizeOf(context).width);
+    final metrics = AppDashboardSection(
+      title: 'Key metrics',
+      subtitle: 'Live operational snapshot',
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AppKpiCard(
+                  label: 'Active jobs',
+                  value: '24',
+                  icon: Icons.assignment_outlined,
+                  iconColor: context.colors.primary,
+                  deltaLabel: '+3 today',
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: AppKpiCard(
+                  label: 'At risk',
+                  value: '5',
+                  icon: Icons.warning_amber_outlined,
+                  iconColor: context.semantic.warning,
+                  deltaLabel: '2 overdue',
+                  trendColor: context.semantic.warning,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: AppKpiCard(
+                  label: 'Completed',
+                  value: '18',
+                  icon: Icons.task_alt_outlined,
+                  iconColor: context.semantic.success,
+                  deltaLabel: '75% of plan',
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: AppKpiCard(
+                  label: 'Delayed',
+                  value: '3',
+                  icon: Icons.schedule_outlined,
+                  iconColor: context.colors.error,
+                  deltaLabel: 'Needs attention',
+                  trendColor: context.colors.error,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+    final networkMap = AppDashboardSection(
+      title: 'Network map',
+      subtitle: 'Area office, feeders, and active crews',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AppMap(
+            height: tablet ? 300 : 240,
+            center: EdlNetworkSites.colombo,
+            markers: EdlNetworkSites.all,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppMapLegend(markers: EdlNetworkSites.all),
+        ],
+      ),
+    );
+
     return Semantics(
       label: widget.title,
       child: AppRefreshIndicator(
@@ -167,7 +245,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
           AppFeedback.toast(context, 'Workspace refreshed');
         },
         child: AppScrollableColumn(
-          padding: AppSpacing.pagePadding,
+          padding: tablet ? AppSpacing.pagePaddingWide : AppSpacing.pagePadding,
           children: [
             AppAlert(
               variant: AppAlertVariant.info,
@@ -175,64 +253,19 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
               message: widget.subtitle,
             ),
             SizedBox(height: gap),
-            AppDashboardSection(
-              title: 'Key metrics',
-              subtitle: 'Live operational snapshot',
-              child: Column(
+            if (tablet)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: AppKpiCard(
-                          label: 'Active jobs',
-                          value: '24',
-                          icon: Icons.assignment_outlined,
-                          iconColor: context.colors.primary,
-                          deltaLabel: '+3 today',
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: AppKpiCard(
-                          label: 'At risk',
-                          value: '5',
-                          icon: Icons.warning_amber_outlined,
-                          iconColor: context.semantic.warning,
-                          deltaLabel: '2 overdue',
-                          trendColor: context.semantic.warning,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppKpiCard(
-                          label: 'Completed',
-                          value: '18',
-                          icon: Icons.task_alt_outlined,
-                          iconColor: context.semantic.success,
-                          deltaLabel: '75% of plan',
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: AppKpiCard(
-                          label: 'Delayed',
-                          value: '3',
-                          icon: Icons.schedule_outlined,
-                          iconColor: context.colors.error,
-                          deltaLabel: 'Needs attention',
-                          trendColor: context.colors.error,
-                        ),
-                      ),
-                    ],
-                  ),
+                  Expanded(flex: 2, child: metrics),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(flex: 3, child: networkMap),
                 ],
-              ),
-            ),
+              )
+            else ...[
+              metrics,
+              networkMap,
+            ],
             AppDashboardSection(
               title: 'Attention needed',
               subtitle: 'Items that should be cleared from the desk today',

@@ -13,5 +13,6 @@ export 'feedback/app_dialog.dart';
 export 'feedback/app_feedback.dart';
 export 'forms/app_form_fields.dart';
 export 'layout/app_layout_utils.dart';
+export 'maps/app_map.dart';
 export 'metronic/app_metronic.dart';
 export 'navigation/app_navigation.dart';
