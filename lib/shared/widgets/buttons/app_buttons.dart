@@ -111,14 +111,21 @@ class AppButton extends StatelessWidget {
       ),
     );
 
+    final primaryFill = backgroundColor ?? context.colors.primary;
+    final dangerFill = backgroundColor ?? context.colors.error;
+
     final button = switch (variant) {
       AppButtonVariant.primary => FilledButton(
         onPressed: enabled ? onPressed : null,
-        style: backgroundColor == null
-            ? style
-            : style.copyWith(
-                backgroundColor: WidgetStatePropertyAll(backgroundColor),
-              ),
+        style: style.copyWith(
+          backgroundColor: WidgetStatePropertyAll(primaryFill),
+          foregroundColor: WidgetStatePropertyAll(context.colors.onPrimary),
+          // Keep primary fill while loading; default disabled tint vanishes in dark mode.
+          disabledBackgroundColor: WidgetStatePropertyAll(primaryFill),
+          disabledForegroundColor: WidgetStatePropertyAll(
+            context.colors.onPrimary,
+          ),
+        ),
         child: child,
       ),
       AppButtonVariant.secondary => FilledButton.tonal(
@@ -139,10 +146,12 @@ class AppButton extends StatelessWidget {
       AppButtonVariant.danger => FilledButton(
         onPressed: enabled ? onPressed : null,
         style: style.copyWith(
-          backgroundColor: WidgetStatePropertyAll(
-            backgroundColor ?? context.colors.error,
-          ),
+          backgroundColor: WidgetStatePropertyAll(dangerFill),
           foregroundColor: WidgetStatePropertyAll(context.colors.onError),
+          disabledBackgroundColor: WidgetStatePropertyAll(dangerFill),
+          disabledForegroundColor: WidgetStatePropertyAll(
+            context.colors.onError,
+          ),
         ),
         child: child,
       ),
