@@ -4,6 +4,7 @@ import '../../app/theme/app_spacing.dart';
 import '../../core/extensions/context_extensions.dart';
 import '../../core/widgets/app_status_chip.dart';
 import '../../shared/widgets/widgets.dart';
+import '../../showcase/app_widget_catalog.dart';
 import 'workspace_kit.dart';
 
 /// Office dashboard built from the Metronic-aligned shared widget kit.
@@ -23,14 +24,9 @@ class WorkspaceShowcase extends StatefulWidget {
 
 class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
   final _searchController = TextEditingController();
-  final _accountController = TextEditingController();
-  final _notesController = TextEditingController();
 
   String _filter = 'All';
   String _search = '';
-  String _priority = 'Normal';
-  DateTime? _dueDate = DateTime.now().add(const Duration(days: 1));
-  bool _notifyOffice = true;
 
   static const _linePoints = [
     WorkspaceChartPoint(label: 'Mon', value: 12),
@@ -146,8 +142,6 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
   @override
   void dispose() {
     _searchController.dispose();
-    _accountController.dispose();
-    _notesController.dispose();
     super.dispose();
   }
 
@@ -357,67 +351,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                 ],
               ),
             ),
-            AppDashboardSection(
-              title: 'Work form',
-              child: AppCard(
-                child: Column(
-                  children: [
-                    AppTextField(
-                      controller: _accountController,
-                      label: 'Account / location',
-                      hint: 'Enter account or site reference',
-                      prefixIcon: Icons.place_outlined,
-                      required: true,
-                    ),
-                    SizedBox(height: gap),
-                    AppDropdown<String>(
-                      label: 'Priority',
-                      value: _priority,
-                      items: const [
-                        DropdownMenuItem(value: 'Low', child: Text('Low')),
-                        DropdownMenuItem(value: 'Normal', child: Text('Normal')),
-                        DropdownMenuItem(value: 'High', child: Text('High')),
-                        DropdownMenuItem(
-                          value: 'Critical',
-                          child: Text('Critical'),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) setState(() => _priority = value);
-                      },
-                    ),
-                    SizedBox(height: gap),
-                    AppDatePickerField(
-                      label: 'Due date',
-                      value: _dueDate,
-                      onChanged: (value) => setState(() => _dueDate = value),
-                    ),
-                    SizedBox(height: gap),
-                    AppTextArea(
-                      controller: _notesController,
-                      label: 'Notes',
-                      hint: 'Add observations or instructions',
-                    ),
-                    AppSwitch(
-                      label: 'Notify office',
-                      subtitle: 'Send update to dispatch when saved',
-                      value: _notifyOffice,
-                      onChanged: (value) =>
-                          setState(() => _notifyOffice = value),
-                    ),
-                    SizedBox(height: gap),
-                    AppButton(
-                      label: 'Save work record',
-                      leadingIcon: Icons.save_outlined,
-                      onPressed: () => AppFeedback.toast(
-                        context,
-                        'Work record saved (demo)',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            const AppWidgetCatalog(),
             SizedBox(height: gap * 2),
           ],
         ),
