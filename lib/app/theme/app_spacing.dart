@@ -17,17 +17,23 @@ class AppSpacing {
   static const EdgeInsets pagePaddingWide = EdgeInsets.all(lg);
 }
 
-/// Corner radius tokens aligned with Metronic (8–20).
+/// Corner radius tokens for the soft, rounded CEBAssist surfaces.
 class AppRadius {
   AppRadius._();
 
-  static const double xs = 8;
-  static const double sm = 12;
-  static const double md = 16;
-  static const double lg = 20;
+  static const double xs = 12;
+  static const double sm = 16;
+  static const double md = 22;
+  static const double lg = 28;
+  static const double xl = 32;
+  static const double pill = 999;
 
   static const BorderRadius borderXs = BorderRadius.all(Radius.circular(xs));
   static const BorderRadius borderSm = BorderRadius.all(Radius.circular(sm));
   static const BorderRadius borderMd = BorderRadius.all(Radius.circular(md));
   static const BorderRadius borderLg = BorderRadius.all(Radius.circular(lg));
+  static const BorderRadius borderXl = BorderRadius.all(Radius.circular(xl));
+  static const BorderRadius borderPill = BorderRadius.all(
+    Radius.circular(pill),
+  );
 }

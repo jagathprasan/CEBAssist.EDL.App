@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class AppBrandColors {
   AppBrandColors._();
 
-  static const Color primary = Color(0xFF0B5ED7);
+  static const Color primary = Color(0xFF3B6FF5);
   static const Color secondary = Color(0xFF00A6A6);
   static const Color accent = Color(0xFFF5B700);
   static const Color success = Color(0xFF16A34A);
@@ -47,7 +47,7 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       accent: AppBrandColors.accent,
       onAccent: Color(0xFF2A2100),
       info: AppBrandColors.primary,
-      infoContainer: Color(0xFFD6E6FF),
+      infoContainer: Color(0xFFE4EDFF),
     );
   }
 

@@ -7,6 +7,7 @@ import '../../../core/widgets/app_confirmation_dialog.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_error_state.dart';
 import '../../../core/widgets/app_loading_skeleton.dart';
+import 'app_dialog.dart';
 
 enum AppViewState { loading, empty, error, content }
 
@@ -268,19 +269,7 @@ class AppFeedback {
     required String title,
     required String message,
   }) {
-    return showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+    return AppDialog.alert(context, title: title, message: message);
   }
 
   static Future<void> warning(
@@ -288,7 +277,12 @@ class AppFeedback {
     required String title,
     required String message,
   }) {
-    return information(context, title: title, message: message);
+    return AppDialog.alert(
+      context,
+      title: title,
+      message: message,
+      tone: AppDialogTone.warning,
+    );
   }
 
   static Future<void> error(
@@ -296,7 +290,12 @@ class AppFeedback {
     required String title,
     required String message,
   }) {
-    return information(context, title: title, message: message);
+    return AppDialog.alert(
+      context,
+      title: title,
+      message: message,
+      tone: AppDialogTone.error,
+    );
   }
 
   static void snackbar(
@@ -309,6 +308,7 @@ class AppFeedback {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
+        behavior: SnackBarBehavior.floating,
         action: actionLabel == null || onAction == null
             ? null
             : SnackBarAction(label: actionLabel, onPressed: onAction),

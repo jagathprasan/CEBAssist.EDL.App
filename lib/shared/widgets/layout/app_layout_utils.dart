@@ -7,6 +7,7 @@ import '../../../app/theme/app_spacing.dart';
 import '../../../core/extensions/context_extensions.dart';
 
 export '../../../core/widgets/app_logo.dart' show AppLogo, AppLogoStyle;
+export 'app_page_background.dart';
 
 class AppNetworkImage extends StatelessWidget {
   const AppNetworkImage({

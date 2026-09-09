@@ -34,9 +34,9 @@ class AppCard extends StatelessWidget {
         color: color ?? context.colors.surfaceContainerLowest,
         borderRadius: AppRadius.borderMd,
         border: Border.all(
-          color: context.colors.outlineVariant.withValues(alpha: 0.5),
+          color: context.colors.outlineVariant.withValues(alpha: 0.35),
         ),
-        boxShadow: elevated ? AppShadows.md(context) : AppShadows.none,
+        boxShadow: elevated ? AppShadows.md(context) : AppShadows.sm(context),
       ),
       child: child,
     );

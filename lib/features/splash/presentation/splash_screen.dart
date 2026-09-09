@@ -57,8 +57,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const AppLogo(height: 40, style: AppLogoStyle.full),
-                const SizedBox(height: AppSpacing.lg),
+                const AppLogo(
+                  height: 28,
+                  maxWidth: 148,
+                  style: AppLogoStyle.full,
+                ),
+                const SizedBox(height: AppSpacing.md),
                 Text(
                   AppConstants.tagline,
                   style: context.textTheme.bodyMedium?.copyWith(

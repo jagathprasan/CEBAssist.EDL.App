@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Elevation / shadow tokens.
+/// Soft, diffused elevation used by cards, dialogs, and floating bars.
 class AppShadows {
   AppShadows._();
 
@@ -10,9 +10,9 @@ class AppShadows {
     final dark = Theme.of(context).brightness == Brightness.dark;
     return [
       BoxShadow(
-        color: Colors.black.withValues(alpha: dark ? 0.24 : 0.04),
-        blurRadius: 8,
-        offset: const Offset(0, 2),
+        color: const Color(0xFF2A3A55).withValues(alpha: dark ? 0.28 : 0.06),
+        blurRadius: 16,
+        offset: const Offset(0, 4),
       ),
     ];
   }
@@ -21,9 +21,10 @@ class AppShadows {
     final dark = Theme.of(context).brightness == Brightness.dark;
     return [
       BoxShadow(
-        color: Colors.black.withValues(alpha: dark ? 0.28 : 0.05),
-        blurRadius: 18,
-        offset: const Offset(0, 6),
+        color: const Color(0xFF2A3A55).withValues(alpha: dark ? 0.32 : 0.07),
+        blurRadius: 28,
+        offset: const Offset(0, 10),
+        spreadRadius: -4,
       ),
     ];
   }
@@ -32,9 +33,10 @@ class AppShadows {
     final dark = Theme.of(context).brightness == Brightness.dark;
     return [
       BoxShadow(
-        color: Colors.black.withValues(alpha: dark ? 0.35 : 0.08),
-        blurRadius: 28,
-        offset: const Offset(0, 12),
+        color: const Color(0xFF2A3A55).withValues(alpha: dark ? 0.4 : 0.1),
+        blurRadius: 40,
+        offset: const Offset(0, 16),
+        spreadRadius: -6,
       ),
     ];
   }

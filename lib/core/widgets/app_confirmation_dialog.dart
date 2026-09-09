@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../app/theme/app_spacing.dart';
-import '../extensions/context_extensions.dart';
+import '../../shared/widgets/feedback/app_dialog.dart';
 
 class AppConfirmationDialog extends StatelessWidget {
   const AppConfirmationDialog({
@@ -27,13 +26,17 @@ class AppConfirmationDialog extends StatelessWidget {
     String cancelLabel = 'Cancel',
     bool isDestructive = false,
   }) async {
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AppConfirmationDialog(
+    final result = await AppDialog.show<bool>(
+      context,
+      child: AppDialog(
         title: title,
         message: message,
-        confirmLabel: confirmLabel,
-        cancelLabel: cancelLabel,
+        tone: isDestructive ? AppDialogTone.error : AppDialogTone.info,
+        icon: isDestructive
+            ? Icons.delete_outline_rounded
+            : Icons.help_outline_rounded,
+        primaryLabel: confirmLabel,
+        secondaryLabel: cancelLabel,
         isDestructive: isDestructive,
       ),
     );
@@ -42,31 +45,16 @@ class AppConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(title),
-      content: Text(message),
-      actionsPadding: const EdgeInsets.fromLTRB(
-        AppSpacing.md,
-        0,
-        AppSpacing.md,
-        AppSpacing.md,
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(cancelLabel),
-        ),
-        FilledButton(
-          style: isDestructive
-              ? FilledButton.styleFrom(
-                  backgroundColor: context.colors.error,
-                  foregroundColor: context.colors.onError,
-                )
-              : null,
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(confirmLabel),
-        ),
-      ],
+    return AppDialog(
+      title: title,
+      message: message,
+      tone: isDestructive ? AppDialogTone.error : AppDialogTone.info,
+      icon: isDestructive
+          ? Icons.delete_outline_rounded
+          : Icons.help_outline_rounded,
+      primaryLabel: confirmLabel,
+      secondaryLabel: cancelLabel,
+      isDestructive: isDestructive,
     );
   }
 }

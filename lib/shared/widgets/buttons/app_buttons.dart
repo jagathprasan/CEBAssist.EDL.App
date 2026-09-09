@@ -99,6 +99,10 @@ class AppButton extends StatelessWidget {
       minimumSize: WidgetStatePropertyAll(
         Size(expand ? double.infinity : 0, height),
       ),
+      elevation: const WidgetStatePropertyAll(0),
+      shape: const WidgetStatePropertyAll(
+        RoundedRectangleBorder(borderRadius: AppRadius.borderPill),
+      ),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
           horizontal: tokens.fieldPaddingH,

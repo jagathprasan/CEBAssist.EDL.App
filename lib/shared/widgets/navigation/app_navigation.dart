@@ -4,6 +4,7 @@ import '../../../app/theme/app_breakpoints.dart';
 import '../../../app/theme/app_sizes.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/extensions/context_extensions.dart';
+import '../layout/app_page_background.dart';
 
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AppAppBar({
@@ -315,13 +316,15 @@ Future<T?> showAppBottomSheet<T>({
     context: context,
     isScrollControlled: isScrollControlled,
     showDragHandle: true,
+    backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+    barrierColor: Colors.black.withValues(alpha: 0.35),
     builder: (ctx) {
       return SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
-            left: AppSpacing.md,
-            right: AppSpacing.md,
-            bottom: MediaQuery.viewInsetsOf(ctx).bottom + AppSpacing.md,
+            left: AppSpacing.lg,
+            right: AppSpacing.lg,
+            bottom: MediaQuery.viewInsetsOf(ctx).bottom + AppSpacing.lg,
             top: AppSpacing.sm,
           ),
           child: Column(
@@ -333,7 +336,7 @@ Future<T?> showAppBottomSheet<T>({
                   title,
                   style: Theme.of(
                     ctx,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
@@ -390,23 +393,25 @@ class AppScaffold extends StatelessWidget {
       content = SafeArea(child: content);
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: appBar,
-      drawer: drawer,
-      bottomNavigationBar: bottomNavigationBar,
-      floatingActionButton: floatingActionButton,
-      body: Stack(
-        children: [
-          content,
-          if (loading)
-            Positioned.fill(
-              child: ColoredBox(
-                color: context.colors.scrim.withValues(alpha: 0.25),
-                child: const Center(child: CircularProgressIndicator()),
+    return AppPageBackground(
+      child: Scaffold(
+        backgroundColor: backgroundColor ?? Colors.transparent,
+        appBar: appBar,
+        drawer: drawer,
+        bottomNavigationBar: bottomNavigationBar,
+        floatingActionButton: floatingActionButton,
+        body: Stack(
+          children: [
+            content,
+            if (loading)
+              Positioned.fill(
+                child: ColoredBox(
+                  color: context.colors.scrim.withValues(alpha: 0.25),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

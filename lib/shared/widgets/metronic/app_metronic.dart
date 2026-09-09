@@ -53,7 +53,7 @@ class AppAlert extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: color.withValues(alpha: context.isDark ? 0.16 : 0.1),
-        borderRadius: AppRadius.borderSm,
+        borderRadius: AppRadius.borderMd,
         border: Border.all(color: color.withValues(alpha: 0.28)),
       ),
       child: Row(
