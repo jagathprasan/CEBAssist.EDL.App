@@ -101,7 +101,7 @@ class AppButton extends StatelessWidget {
       ),
       elevation: const WidgetStatePropertyAll(0),
       shape: const WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: AppRadius.borderPill),
+        RoundedRectangleBorder(borderRadius: AppRadius.borderSm),
       ),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
@@ -120,11 +120,6 @@ class AppButton extends StatelessWidget {
         style: style.copyWith(
           backgroundColor: WidgetStatePropertyAll(primaryFill),
           foregroundColor: WidgetStatePropertyAll(context.colors.onPrimary),
-          // Keep primary fill while loading; default disabled tint vanishes in dark mode.
-          disabledBackgroundColor: WidgetStatePropertyAll(primaryFill),
-          disabledForegroundColor: WidgetStatePropertyAll(
-            context.colors.onPrimary,
-          ),
         ),
         child: child,
       ),
@@ -148,10 +143,6 @@ class AppButton extends StatelessWidget {
         style: style.copyWith(
           backgroundColor: WidgetStatePropertyAll(dangerFill),
           foregroundColor: WidgetStatePropertyAll(context.colors.onError),
-          disabledBackgroundColor: WidgetStatePropertyAll(dangerFill),
-          disabledForegroundColor: WidgetStatePropertyAll(
-            context.colors.onError,
-          ),
         ),
         child: child,
       ),

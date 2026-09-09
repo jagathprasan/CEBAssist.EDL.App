@@ -50,16 +50,18 @@ class AppAlert extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: context.isDark ? 0.16 : 0.1),
+        color: context.isDark
+            ? color.withValues(alpha: 0.16)
+            : color.withValues(alpha: 0.12),
         borderRadius: AppRadius.borderMd,
-        border: Border.all(color: color.withValues(alpha: 0.28)),
+        border: Border.all(color: color.withValues(alpha: 0.18)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color),
+          Icon(icon, color: color, size: 22),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
@@ -315,6 +317,11 @@ class AppToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilterChip(
       selected: selected,
+      showCheckmark: true,
+      visualDensity: VisualDensity.compact,
+      selectedColor: context.colors.primaryContainer,
+      backgroundColor: context.colors.surfaceContainerHighest,
+      checkmarkColor: context.colors.primary,
       onSelected: onChanged,
       avatar: icon == null ? null : Icon(icon, size: 16),
       label: Text(label),

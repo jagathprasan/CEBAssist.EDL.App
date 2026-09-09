@@ -29,7 +29,7 @@ class AppTheme {
         displayColor: colorScheme.onSurface,
       ),
     );
-    final pill = RoundedRectangleBorder(borderRadius: AppRadius.borderPill);
+    final rounded = RoundedRectangleBorder(borderRadius: AppRadius.borderSm);
     final sheet = RoundedRectangleBorder(borderRadius: AppRadius.borderLg);
 
     return ThemeData(
@@ -64,10 +64,13 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: AppRadius.borderMd),
       ),
       chipTheme: ChipThemeData(
-        shape: pill,
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.borderPill),
         side: BorderSide.none,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        selectedColor: colorScheme.primaryContainer,
+        backgroundColor: colorScheme.surfaceContainerHighest,
+        checkmarkColor: colorScheme.primary,
         labelStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -166,9 +169,9 @@ class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(52),
+          minimumSize: const Size.fromHeight(48),
           elevation: 0,
-          shape: pill,
+          shape: rounded,
           textStyle: textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w700,
           ),
@@ -177,7 +180,7 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(48, 48),
-          shape: pill,
+          shape: rounded,
           side: BorderSide(color: colorScheme.outline.withValues(alpha: 0.7)),
         ),
       ),
@@ -185,11 +188,11 @@ class AppTheme {
         style: TextButton.styleFrom(
           minimumSize: const Size(48, 40),
           foregroundColor: colorScheme.primary,
-          shape: pill,
+          shape: rounded,
         ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        shape: pill,
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.borderMd),
         elevation: 2,
         highlightElevation: 4,
       ),
@@ -217,7 +220,7 @@ class AppTheme {
     onError: Color(0xFFFFFFFF),
     errorContainer: Color(0xFFFFE4E2),
     onErrorContainer: Color(0xFF410002),
-    surface: Color(0xFFF6F7FB),
+    surface: Color(0xFFF4F6FA),
     onSurface: Color(0xFF1B1F27),
     onSurfaceVariant: Color(0xFF667085),
     outline: Color(0xFFD5DCE8),
@@ -293,7 +296,7 @@ class AppSurfaces {
     return const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0xFFF7F8FC), Color(0xFFF3EEF5)],
+      colors: [Color(0xFFF4F6FA), Color(0xFFF4F6FA)],
     );
   }
 }

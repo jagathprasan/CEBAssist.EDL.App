@@ -259,7 +259,9 @@ class _AppSearchFieldState extends State<AppSearchField> {
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         hintText: widget.hint,
-        prefixIcon: const Icon(Icons.search),
+        filled: true,
+        fillColor: context.colors.surfaceContainerLowest,
+        prefixIcon: Icon(Icons.search, color: context.colors.onSurfaceVariant),
         suffixIcon: widget.controller.text.isEmpty
             ? null
             : IconButton(
@@ -271,6 +273,22 @@ class _AppSearchFieldState extends State<AppSearchField> {
                 },
                 icon: const Icon(Icons.close),
               ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: AppRadius.borderMd,
+          borderSide: BorderSide(color: context.colors.outlineVariant),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: AppRadius.borderMd,
+          borderSide: BorderSide(color: context.colors.outlineVariant),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppRadius.borderMd,
+          borderSide: BorderSide(color: context.colors.primary, width: 1.4),
+        ),
       ),
     );
   }
