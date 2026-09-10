@@ -22,11 +22,13 @@ class AppLogo extends StatelessWidget {
     this.showWordmark = false,
     this.compact = false,
     this.style,
+    this.maxWidth,
   });
 
   final double height;
   final bool showWordmark;
   final bool compact;
+  final double? maxWidth;
 
   /// Defaults to [AppLogoStyle.wordmark] when [compact] is true.
   final AppLogoStyle? style;
@@ -44,16 +46,22 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logo = Image.asset(
-      _asset,
-      height: height,
-      fit: BoxFit.contain,
-      filterQuality: FilterQuality.high,
-      errorBuilder: (context, error, stackTrace) {
-        return compact
-            ? _FallbackMark(size: height)
-            : _FallbackWordmark(height: height);
-      },
+    final logo = ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: height,
+        maxWidth: maxWidth ?? height * 5.5,
+      ),
+      child: Image.asset(
+        _asset,
+        height: height,
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.high,
+        errorBuilder: (context, error, stackTrace) {
+          return compact
+              ? _FallbackMark(size: height)
+              : _FallbackWordmark(height: height);
+        },
+      ),
     );
 
     if (!showWordmark) return logo;
@@ -64,7 +72,7 @@ class AppLogo extends StatelessWidget {
         logo,
         const SizedBox(height: AppSpacing.sm),
         Text(
-          AppConstants.appFullName,
+          AppConstants.companyLegalName,
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colors.onSurfaceVariant,
             fontWeight: FontWeight.w500,

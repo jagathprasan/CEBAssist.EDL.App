@@ -8,8 +8,12 @@ class AppConstants {
   /// Primary product name shown in the UI.
   static const String appName = 'CEBAssist';
 
-  /// Longer product description used in about copy and login.
-  static const String appFullName = 'EDL · Electricity Board ERP';
+  /// Longer product description used in about copy.
+  static const String appFullName = 'Electricity Distribution Lanka (Pvt) Ltd';
+
+  /// Legal company name shown under the login and splash logos.
+  static const String companyLegalName =
+      'Electricity Distribution Lanka (Pvt) Ltd';
 
   /// Short line displayed on the splash screen.
   static const String tagline = 'Powering Smarter Operations';

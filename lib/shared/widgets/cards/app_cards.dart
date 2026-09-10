@@ -34,9 +34,9 @@ class AppCard extends StatelessWidget {
         color: color ?? context.colors.surfaceContainerLowest,
         borderRadius: AppRadius.borderMd,
         border: Border.all(
-          color: context.colors.outlineVariant.withValues(alpha: 0.5),
+          color: context.colors.outlineVariant.withValues(alpha: 0.35),
         ),
-        boxShadow: elevated ? AppShadows.md(context) : AppShadows.none,
+        boxShadow: elevated ? AppShadows.md(context) : AppShadows.sm(context),
       ),
       child: child,
     );
@@ -111,6 +111,7 @@ class AppStatCard extends StatelessWidget {
     this.trendLabel,
     this.icon,
     this.iconColor,
+    this.trendColor,
     this.onTap,
   });
 
@@ -119,6 +120,7 @@ class AppStatCard extends StatelessWidget {
   final String? trendLabel;
   final IconData? icon;
   final Color? iconColor;
+  final Color? trendColor;
   final VoidCallback? onTap;
 
   @override
@@ -126,44 +128,56 @@ class AppStatCard extends StatelessWidget {
     final accent = iconColor ?? context.colors.primary;
     return AppCard(
       onTap: onTap,
-      elevated: false,
-      child: Row(
+      elevated: true,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: context.textTheme.labelLarge?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  value,
-                  style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                if (trendLabel != null) ...[
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    trendLabel!,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.semantic.success,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ],
+          Row(
+            children: [
+              if (icon != null)
+                AppIconBox(icon: icon!, color: accent, size: 40),
+              const Spacer(),
+              Icon(
+                Icons.show_chart_rounded,
+                size: 20,
+                color: trendColor ?? accent,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.8,
+              height: 1.05,
             ),
           ),
-          if (icon != null) AppIconBox(icon: icon!, color: accent),
+          const SizedBox(height: AppSpacing.xxs),
+          Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          if (trendLabel != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              trendLabel!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: trendColor ?? accent,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -190,7 +204,7 @@ class AppIconBox extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: color.withValues(alpha: context.isDark ? 0.22 : 0.12),
-        borderRadius: AppRadius.borderXs,
+        borderRadius: AppRadius.borderSm,
       ),
       child: Icon(icon, color: color, size: size * 0.48),
     );
@@ -316,12 +330,26 @@ class AppListTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       leading: leading,
-      title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
+      title: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: context.textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+      ),
       subtitle: subtitle == null
           ? null
-          : Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis),
+          : Text(
+              subtitle!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
       trailing: trailing,
-      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      contentPadding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: AppRadius.borderSm),
     );
   }
@@ -351,7 +379,7 @@ class AppSectionHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: context.textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -497,6 +525,9 @@ enum AppEntityStatus {
   cancelled,
   draft,
   inProgress,
+  synced,
+  notSynced,
+  offline,
 }
 
 class AppStatusBadge extends StatelessWidget {
@@ -518,6 +549,9 @@ class AppStatusBadge extends StatelessWidget {
       AppEntityStatus.cancelled => ('Cancelled', AppStatusTone.error),
       AppEntityStatus.draft => ('Draft', AppStatusTone.neutral),
       AppEntityStatus.inProgress => ('In Progress', AppStatusTone.info),
+      AppEntityStatus.synced => ('Synced', AppStatusTone.success),
+      AppEntityStatus.notSynced => ('Not Synced', AppStatusTone.warning),
+      AppEntityStatus.offline => ('Offline', AppStatusTone.neutral),
     };
     return AppStatusChip(label: label, tone: tone, compact: compact);
   }
@@ -627,5 +661,23 @@ class AppKeyValueRow extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Priority chip with consistent semantic colours in both UI modes.
+class AppPriorityBadge extends StatelessWidget {
+  const AppPriorityBadge({super.key, required this.priority});
+
+  final String priority;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = switch (priority.toLowerCase()) {
+      'critical' => AppStatusTone.error,
+      'high' => AppStatusTone.warning,
+      'low' => AppStatusTone.neutral,
+      _ => AppStatusTone.info,
+    };
+    return AppStatusChip(label: priority, tone: tone);
   }
 }

@@ -50,16 +50,18 @@ class AppAlert extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: context.isDark ? 0.16 : 0.1),
-        borderRadius: AppRadius.borderSm,
-        border: Border.all(color: color.withValues(alpha: 0.28)),
+        color: context.isDark
+            ? color.withValues(alpha: 0.16)
+            : color.withValues(alpha: 0.12),
+        borderRadius: AppRadius.borderMd,
+        border: Border.all(color: color.withValues(alpha: 0.18)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color),
+          Icon(icon, color: color, size: 22),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
@@ -105,41 +107,48 @@ class AppBreadcrumbItem {
 }
 
 class AppBreadcrumb extends StatelessWidget {
-  const AppBreadcrumb({super.key, required this.items});
+  const AppBreadcrumb({super.key, required this.items, this.compact = false});
 
   final List<AppBreadcrumbItem> items;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        for (var i = 0; i < items.length; i++) ...[
-          if (i > 0)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Icon(
-                Icons.chevron_right,
-                size: 16,
-                color: context.colors.onSurfaceVariant,
+    final style =
+        (compact ? context.textTheme.labelSmall : context.textTheme.labelLarge)
+            ?.copyWith(height: 1.1);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (var i = 0; i < items.length; i++) ...[
+            if (i > 0)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: compact ? 14 : 16,
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            InkWell(
+              onTap: items[i].onTap,
+              child: Text(
+                items[i].label,
+                style: style?.copyWith(
+                  fontWeight: i == items.length - 1
+                      ? FontWeight.w700
+                      : FontWeight.w500,
+                  color: i == items.length - 1
+                      ? context.colors.onSurface
+                      : context.colors.onSurfaceVariant,
+                ),
               ),
             ),
-          InkWell(
-            onTap: items[i].onTap,
-            child: Text(
-              items[i].label,
-              style: context.textTheme.labelLarge?.copyWith(
-                fontWeight: i == items.length - 1
-                    ? FontWeight.w700
-                    : FontWeight.w500,
-                color: i == items.length - 1
-                    ? context.colors.onSurface
-                    : context.colors.onSurfaceVariant,
-              ),
-            ),
-          ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -308,6 +317,11 @@ class AppToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilterChip(
       selected: selected,
+      showCheckmark: true,
+      visualDensity: VisualDensity.compact,
+      selectedColor: context.colors.primaryContainer,
+      backgroundColor: context.colors.surfaceContainerHighest,
+      checkmarkColor: context.colors.primary,
       onSelected: onChanged,
       avatar: icon == null ? null : Icon(icon, size: 16),
       label: Text(label),

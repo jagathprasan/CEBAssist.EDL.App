@@ -10,6 +10,7 @@ import '../../../core/extensions/context_extensions.dart';
 import '../../../features/shell/presentation/app_drawer.dart';
 import '../../../shared/providers/settings_provider.dart';
 import '../../../shared/providers/theme_mode_provider.dart';
+import '../../../shared/widgets/widgets.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -215,14 +216,8 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+    return AppCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

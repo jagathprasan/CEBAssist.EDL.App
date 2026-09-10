@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_breakpoints.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../core/extensions/context_extensions.dart';
-import '../../core/widgets/app_status_chip.dart';
+import '../../shared/data/edl_network_sites.dart';
 import '../../shared/widgets/widgets.dart';
-import 'workspace_kit.dart';
+import '../../showcase/app_widget_catalog.dart';
 
-/// Outdoor crew workspace: one job at a time, large targets, GPS, photos, call.
+/// Outdoor crew workspace: large sunlight-friendly targets plus the shared kit.
 class FieldWorkspaceView extends StatefulWidget {
   const FieldWorkspaceView({super.key});
 
@@ -27,24 +28,8 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now();
-    final events = [
-      WorkspaceCalendarEvent(
-        date: today,
-        title: 'Team briefing',
-        timeLabel: '08:30',
-        location: 'Area office',
-        tone: AppStatusTone.info,
-      ),
-      WorkspaceCalendarEvent(
-        date: today,
-        title: 'Site inspection',
-        timeLabel: '13:00',
-        location: 'Unit A feeder',
-        tone: AppStatusTone.warning,
-      ),
-    ];
-
+    final tokens = AppDesignTokens.ofContext(context);
+    final tablet = !AppBreakpoints.isCompact(MediaQuery.sizeOf(context).width);
     return AppRefreshIndicator(
       onRefresh: () async {
         await Future<void>.delayed(const Duration(milliseconds: 500));
@@ -52,40 +37,36 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
         AppFeedback.toast(context, 'Jobs refreshed');
       },
       child: AppScrollableColumn(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.fromLTRB(
+          tokens.cardPadding,
+          AppSpacing.sm,
+          tokens.cardPadding,
+          AppSpacing.xl,
+        ),
         children: [
-          AppBreadcrumb(
-            items: const [
-              AppBreadcrumbItem(label: 'Workspaces'),
-              AppBreadcrumbItem(label: 'Field'),
-              AppBreadcrumbItem(label: 'Today'),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          const AppPageHeader(
-            title: 'Field Workspace',
-            subtitle: 'Gloves-friendly controls for crews on site.',
-          ),
           AppAlert(
             variant: AppAlertVariant.success,
-            title: 'On site · GPS locked',
-            message:
-                'Unit A feeder · 120 m from assigned job. Work offline if signal drops.',
+            title: 'On site',
+            message: 'GPS locked · Unit A feeder · 120 m from the job.',
           ),
-          const SizedBox(height: AppSpacing.lg),
+          SizedBox(height: tokens.gap),
           AppCard(
             elevated: false,
+            padding: EdgeInsets.all(tokens.cardPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    const Expanded(
-                      child: Text(
-                        'Current job',
-                        style: TextStyle(fontWeight: FontWeight.w700),
+                    Text(
+                      'Current job',
+                      style: context.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        fontSize: tokens.labelSize,
+                        color: context.colors.onSurfaceVariant,
                       ),
                     ),
+                    const Spacer(),
                     AppStatusBadge(
                       status: _jobStarted
                           ? AppEntityStatus.inProgress
@@ -93,35 +74,38 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                SizedBox(height: tokens.gap / 2),
                 Text(
                   'Feeder inspection',
-                  style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
+                  style: context.textTheme.headlineMedium?.copyWith(
+                    fontWeight: tokens.titleWeight,
+                    fontSize: tokens.titleSize,
+                    height: 1.1,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xxs),
+                SizedBox(height: tokens.gap / 3),
                 Text(
-                  'EDL-1042 · Unit A · Crew 3',
+                  'Unit A · Crew 3',
                   style: context.textTheme.titleMedium?.copyWith(
                     color: context.colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                    fontSize: tokens.subtitleSize,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                const AppIconLabel(
+                SizedBox(height: tokens.gap),
+                AppIconLabel(
                   icon: Icons.place_outlined,
-                  label: 'Feeder 11 · pole 24, Unit A',
+                  label: 'Feeder 11, pole 24',
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                SizedBox(height: tokens.gap / 3),
                 const AppIconLabel(
                   icon: Icons.schedule_outlined,
-                  label: 'Due 13:00 · 2 hours remaining',
+                  label: 'Due 13:00 · 2 hours left',
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                AppPrimaryButton(
+                SizedBox(height: tokens.sectionGap / 2),
+                AppButton(
                   label: _jobStarted ? 'Job in progress' : 'Start job',
                   leadingIcon: Icons.play_arrow_rounded,
-                  size: AppButtonSize.lg,
                   onPressed: () {
                     setState(() => _jobStarted = true);
                     AppFeedback.toast(context, 'Job started');
@@ -130,104 +114,111 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            children: [
-              Expanded(
-                child: AppSecondaryButton(
-                  label: 'Navigate',
-                  leadingIcon: Icons.near_me_outlined,
-                  size: AppButtonSize.lg,
-                  onPressed: () =>
-                      AppFeedback.toast(context, 'Opening maps (demo)'),
+          SizedBox(height: tokens.gap),
+          AppDashboardSection(
+            title: 'Job map',
+            subtitle: 'Your current site and next stops',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppMap(
+                  height: tablet ? 320 : 260,
+                  center: EdlNetworkSites.colombo,
+                  markers: EdlNetworkSites.field,
                 ),
+                SizedBox(height: tokens.gap / 2),
+                AppMapLegend(markers: EdlNetworkSites.field),
+              ],
+            ),
+          ),
+          AppQuickActionGrid(
+            crossAxisCount: tablet ? 4 : 2,
+            actions: [
+              AppQuickAction(
+                icon: Icons.near_me_outlined,
+                label: 'Navigate',
+                onTap: () => AppFeedback.toast(context, 'Opening maps (demo)'),
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: AppOutlineButton(
-                  label: 'Call office',
-                  leadingIcon: Icons.call_outlined,
-                  size: AppButtonSize.lg,
-                  onPressed: () =>
-                      AppFeedback.toast(context, 'Calling dispatch (demo)'),
+              AppQuickAction(
+                icon: Icons.call_outlined,
+                label: 'Call office',
+                onTap: () =>
+                    AppFeedback.toast(context, 'Calling dispatch (demo)'),
+              ),
+              AppQuickAction(
+                icon: Icons.photo_camera_outlined,
+                label: _photoAttached ? 'Photo saved' : 'Capture photo',
+                onTap: () {
+                  setState(() => _photoAttached = true);
+                  AppFeedback.toast(context, 'Photo captured (demo)');
+                },
+              ),
+              AppQuickAction(
+                icon: Icons.wifi_off_outlined,
+                label: 'Work offline',
+                onTap: () => AppFeedback.toast(
+                  context,
+                  'Notes will sync when signal returns',
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          AppOutlineButton(
-            label: _photoAttached ? 'Photo attached' : 'Capture photo',
-            leadingIcon: Icons.photo_camera_outlined,
-            size: AppButtonSize.lg,
-            onPressed: () {
-              setState(() => _photoAttached = true);
-              AppFeedback.toast(context, 'Photo captured (demo)');
-            },
-          ),
-          const SizedBox(height: AppSpacing.xl),
+          SizedBox(height: tokens.sectionGap),
           AppDashboardSection(
-            title: "Today's jobs",
-            subtitle: 'Tap a card. Large targets for outdoor use.',
+            title: 'Up next',
+            subtitle: 'Large cards. Tap to open the next site.',
             child: Column(
               children: [
                 AppMobileDataCard(
-                  title: 'EDL-1042  Feeder inspection',
+                  title: 'Meter replacement',
                   entries: const {
-                    'Area': 'Unit A',
-                    'ETA': '13:00',
-                    'Status': 'Current',
-                  },
-                  trailing: const AppStatusBadge(
-                    status: AppEntityStatus.inProgress,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                AppMobileDataCard(
-                  title: 'EDL-1048  Meter replacement',
-                  entries: const {
-                    'Area': 'Unit C',
-                    'ETA': '15:30',
-                    'Status': 'Next',
+                    'Location': 'Unit C, consumer service',
+                    'When': '15:30',
+                    'Crew': 'Crew 3',
                   },
                   trailing: const AppStatusBadge(
                     status: AppEntityStatus.pending,
+                  ),
+                ),
+                SizedBox(height: tokens.gap),
+                AppMobileDataCard(
+                  title: 'Complaint follow-up',
+                  entries: const {
+                    'Location': 'Unit B, access pending',
+                    'When': '16:45',
+                    'Crew': 'Crew 3',
+                  },
+                  trailing: const AppStatusBadge(
+                    status: AppEntityStatus.delayed,
                   ),
                 ),
               ],
             ),
           ),
           AppDashboardSection(
-            title: "Today's posts",
-            subtitle: 'Briefing and site visits for this crew',
+            title: 'Site notes',
             child: AppCard(
               elevated: false,
-              child: WorkspaceCalendar(events: events),
-            ),
-          ),
-          AppDashboardSection(
-            title: 'Field report',
-            child: AppCard(
-              elevated: false,
+              padding: EdgeInsets.all(tokens.cardPadding),
               child: Column(
                 children: [
                   AppTextArea(
                     controller: _notesController,
-                    label: 'Site notes',
-                    hint: 'What did you find? Keep it short.',
+                    label: 'What did you find?',
+                    hint: 'Short note. Gloves-friendly keyboard.',
                     minLines: 4,
                     maxLines: 6,
                   ),
                   AppCheckbox(
-                    label: 'Attach site photos',
+                    label: 'Photo attached',
                     value: _photoAttached,
                     onChanged: (value) =>
                         setState(() => _photoAttached = value),
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppPrimaryButton(
+                  SizedBox(height: tokens.gap),
+                  AppButton(
                     label: 'Submit report',
                     leadingIcon: Icons.cloud_upload_outlined,
-                    size: AppButtonSize.lg,
                     onPressed: () =>
                         AppFeedback.toast(context, 'Report sent to office'),
                   ),
@@ -235,7 +226,8 @@ class _FieldWorkspaceViewState extends State<FieldWorkspaceView> {
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.xl),
+          SizedBox(height: tokens.sectionGap),
+          const AppWidgetCatalog(),
         ],
       ),
     );

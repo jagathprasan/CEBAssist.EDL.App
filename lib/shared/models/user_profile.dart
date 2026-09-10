@@ -16,9 +16,13 @@ class UserProfile {
     this.userType = '',
     this.lastActivity = '',
     this.divisionId = '',
+    this.divisionName = '',
     this.branchId = '',
+    this.branchName = '',
     this.unitId = '',
+    this.unitName = '',
     this.subUnitId = '',
+    this.subUnitName = '',
     this.roles = const [],
   });
 
@@ -35,9 +39,13 @@ class UserProfile {
   final String userType;
   final String lastActivity;
   final String divisionId;
+  final String divisionName;
   final String branchId;
+  final String branchName;
   final String unitId;
+  final String unitName;
   final String subUnitId;
+  final String subUnitName;
   final String status;
   final String? avatarUrl;
   final List<String> roles;
@@ -48,20 +56,27 @@ class UserProfile {
   }
 
   String get titleLine {
-    if (designation.isNotEmpty) return designation;
-    if (userType.isNotEmpty) return userType;
-    return companyId ?? '';
+    for (final value in [designation, userType, companyId ?? '']) {
+      final label = value.asDisplayLabel;
+      if (label.isNotEmpty) return label;
+    }
+    return '';
+  }
+
+  static String displayLabel(String? value, {String empty = '—'}) {
+    final label = (value ?? '').asDisplayLabel;
+    return label.isEmpty ? empty : label;
   }
 
   String get organizationLine {
     final parts = [
-      if (divisionId.isNotEmpty) divisionId,
-      if (branchId.isNotEmpty) branchId,
-      if (unitId.isNotEmpty) unitId,
-      if (subUnitId.isNotEmpty) subUnitId,
-    ];
-    if (parts.isNotEmpty) return parts.join(' · ');
-    return office;
+      divisionName.asDisplayLabel,
+      branchName.asDisplayLabel,
+      unitName.asDisplayLabel,
+      subUnitName.asDisplayLabel,
+      office.asDisplayLabel,
+    ].where((value) => value.isNotEmpty).toSet().toList();
+    return parts.join(' · ');
   }
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -96,9 +111,13 @@ class UserProfile {
       userType: read('userType', 'UserType'),
       lastActivity: read('lastActivity', 'LastActivity'),
       divisionId: read('divisionId', 'DivisionId'),
+      divisionName: read('divisionName', 'DivisionName'),
       branchId: read('branchId', 'BranchId'),
+      branchName: read('branchName', 'BranchName'),
       unitId: read('unitId', 'UnitId'),
+      unitName: read('unitName', 'UnitName'),
       subUnitId: read('subUnitId', 'SubUnitId'),
+      subUnitName: read('subUnitName', 'SubUnitName'),
       status: read('status', 'Status', 'Active'),
       avatarUrl: read('avatarUrl', 'AvatarUrl').ifEmpty(null),
       roles: readRoles(),
@@ -120,9 +139,13 @@ class UserProfile {
       'userType': userType,
       'lastActivity': lastActivity,
       'divisionId': divisionId,
+      'divisionName': divisionName,
       'branchId': branchId,
+      'branchName': branchName,
       'unitId': unitId,
+      'unitName': unitName,
       'subUnitId': subUnitId,
+      'subUnitName': subUnitName,
       'status': status,
       'avatarUrl': avatarUrl,
       'roles': roles,
@@ -151,9 +174,13 @@ class UserProfile {
       userType: userType,
       lastActivity: lastActivity,
       divisionId: divisionId,
+      divisionName: divisionName,
       branchId: branchId,
+      branchName: branchName,
       unitId: unitId,
+      unitName: unitName,
       subUnitId: subUnitId,
+      subUnitName: subUnitName,
       status: status,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       roles: roles ?? this.roles,
@@ -174,8 +201,11 @@ class UserProfile {
     userType: 'Staff',
     lastActivity: '',
     divisionId: 'DD1',
+    divisionName: 'Transmission',
     branchId: '',
+    branchName: 'System Control',
     unitId: '',
+    unitName: 'System Operation',
     status: 'Active',
     roles: ['User'],
   );
@@ -183,4 +213,14 @@ class UserProfile {
 
 extension on String {
   String? ifEmpty(String? fallback) => trim().isEmpty ? fallback : this;
+
+  String get asDisplayLabel {
+    final value = trim();
+    if (value.isEmpty) return '';
+    final guid = RegExp(
+      r'^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$',
+    );
+    if (guid.hasMatch(value)) return '';
+    return value;
+  }
 }

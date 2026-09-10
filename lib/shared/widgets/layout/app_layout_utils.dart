@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme/app_design_tokens.dart';
 import '../../../app/theme/app_breakpoints.dart';
 import '../../../app/theme/app_durations.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/extensions/context_extensions.dart';
 
 export '../../../core/widgets/app_logo.dart' show AppLogo, AppLogoStyle;
+export 'app_page_background.dart';
 
 class AppNetworkImage extends StatelessWidget {
   const AppNetworkImage({
@@ -125,12 +127,23 @@ class AppIconLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppDesignTokens.ofContext(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 18, color: context.colors.onSurfaceVariant),
+        Icon(
+          icon,
+          size: tokens.isField ? tokens.iconSize * 0.7 : 18,
+          color: context.colors.onSurfaceVariant,
+        ),
         SizedBox(width: gap),
-        Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
+        Flexible(
+          child: Text(
+            label,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: tokens.isField ? tokens.bodySize : null),
+          ),
+        ),
       ],
     );
   }

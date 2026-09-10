@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/constants/app_constants.dart';
 import '../shared/providers/theme_mode_provider.dart';
+import '../shared/widgets/layout/app_page_background.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
@@ -21,6 +22,9 @@ class ElectricityBoardApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       themeMode: themeMode,
       routerConfig: router,
+      builder: (context, child) {
+        return AppPageBackground(child: child ?? const SizedBox.shrink());
+      },
     );
   }
 }

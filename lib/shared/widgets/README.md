@@ -120,20 +120,27 @@ Decorative web-only effects (marquee, particle background, GitHub button, typing
 ## Usage example
 
 ```dart
-AppPrimaryButton(
+AppButton(
+  mode: AppUiMode.field, // or inherit AppUiModeScope
   label: 'Save',
   leadingIcon: Icons.save_outlined,
   isLoading: saving,
   onPressed: saving ? null : onSave,
 );
 
+FieldButton(label: 'Submit', onPressed: onSubmit);
+OfficeButton(label: 'Submit', onPressed: onSubmit);
+
 AppTextField(
+  mode: AppUiMode.office,
   controller: controller,
   label: 'Account',
   required: true,
   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
 );
 ```
+
+`AppUiMode` / `FieldDesignTokens` / `OfficeDesignTokens` live in `lib/app/theme/`. Wrap a subtree with `AppUiModeScope` so buttons and fields pick the right size automatically.
 
 ## Rules for new widgets
 
@@ -147,6 +154,9 @@ AppTextField(
 
 Route: `/dev/widget-showcase`
 
+- Hub with **View Field UI** and **View Office UI**.
+- Each catalog has a Field/Office switch.
+- The same catalog is also embedded in **Field Workspace** and **Office Workspace**.
 - Registered only when `kDebugMode` is true.
-- Open from **Settings → Developer → Widget showcase** in debug builds.
+- Open from **Settings → Developer → Widget showcase**.
 - Not shown in production navigation.

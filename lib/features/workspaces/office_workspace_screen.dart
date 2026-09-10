@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'workspace_kit.dart';
+import '../../app/theme/app_ui_mode.dart';
 import 'workspace_showcase.dart';
 
 class OfficeWorkspaceScreen extends StatelessWidget {
@@ -8,8 +8,8 @@ class OfficeWorkspaceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const WorkspaceScope(
-      mode: WorkspaceMode.office,
+    return const AppUiModeScope(
+      mode: AppUiMode.office,
       child: WorkspaceShowcase(
         title: 'Office Workspace',
         subtitle:

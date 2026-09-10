@@ -64,8 +64,11 @@ void main() {
     await scrollTo(tester, find.text('Navigate'));
     expect(find.text('Navigate'), findsOneWidget);
 
-    await scrollTo(tester, find.text("Today's posts"));
-    expect(find.text("Today's posts"), findsOneWidget);
+    await scrollTo(tester, find.text('Primary'));
+    expect(find.text('Primary'), findsOneWidget);
+
+    await scrollTo(tester, find.text('Up next'));
+    expect(find.text('Up next'), findsOneWidget);
 
     await scrollTo(tester, find.text('Submit report'));
     expect(find.text('Submit report'), findsOneWidget);

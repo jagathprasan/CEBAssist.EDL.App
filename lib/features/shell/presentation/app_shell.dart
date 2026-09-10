@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/app_routes.dart';
+import '../../../shared/widgets/layout/app_page_background.dart';
 import 'app_drawer.dart';
 import 'app_main_bar.dart';
 
@@ -18,6 +19,9 @@ class AppShell extends StatelessWidget {
     AppRoutes.notifications: 'Notifications',
     AppRoutes.profile: 'Profile',
     AppRoutes.settings: 'Settings',
+    AppRoutes.widgetShowcase: 'UI catalog',
+    AppRoutes.fieldWidgetShowcase: 'Field UI',
+    AppRoutes.officeWidgetShowcase: 'Office UI',
     AppRoutes.consumerServices: 'Consumer Services',
     AppRoutes.meterManagement: 'Meter Management',
     AppRoutes.billing: 'Billing',
@@ -34,10 +38,13 @@ class AppShell extends StatelessWidget {
 
     // Phone-first drawer layout. A navigation rail can replace the drawer
     // here when tablet support is added (breakpoint around 1024px).
-    return Scaffold(
-      appBar: AppMainBar(title: title),
-      drawer: AppDrawer(currentLocation: location),
-      body: child,
+    return AppPageBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppMainBar(title: title),
+        drawer: AppDrawer(currentLocation: location),
+        body: child,
+      ),
     );
   }
 }

@@ -21,13 +21,14 @@ class AppPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     final child = isLoading
         ? SizedBox(
             height: 22,
             width: 22,
             child: CircularProgressIndicator(
               strokeWidth: 2.4,
-              color: context.colors.onPrimary,
+              color: colors.onPrimary,
             ),
           )
         : Row(
@@ -44,6 +45,12 @@ class AppPrimaryButton extends StatelessWidget {
 
     final button = FilledButton(
       onPressed: isLoading ? null : onPressed,
+      style: FilledButton.styleFrom(
+        // Keep the primary fill while loading so the button stays visible
+        // on dark surfaces (Material's default disabled tint is too muted).
+        disabledBackgroundColor: colors.primary,
+        disabledForegroundColor: colors.onPrimary,
+      ),
       child: child,
     );
 

@@ -21,6 +21,8 @@ class AppRoutes {
   static const String reports = '/reports';
 
   static const String widgetShowcase = '/dev/widget-showcase';
+  static const String fieldWidgetShowcase = '/dev/widget-showcase/field';
+  static const String officeWidgetShowcase = '/dev/widget-showcase/office';
 
   static const Set<String> publicRoutes = {splash, login, forgotPassword};
 

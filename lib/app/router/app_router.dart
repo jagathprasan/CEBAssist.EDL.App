@@ -14,7 +14,9 @@ import '../../features/shell/presentation/app_shell.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/workspaces/field_workspace_screen.dart';
 import '../../features/workspaces/office_workspace_screen.dart';
-import '../../shared/widgets/widget_showcase_page.dart';
+import '../../showcase/field_widget_showcase_page.dart';
+import '../../showcase/office_widget_showcase_page.dart';
+import '../../showcase/widget_showcase_hub_page.dart';
 import 'app_routes.dart';
 
 /// Optional start path used by widget tests.
@@ -91,11 +93,20 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.settings,
             builder: (context, state) => const SettingsScreen(),
           ),
-          if (kDebugMode)
+          if (kDebugMode) ...[
             GoRoute(
               path: AppRoutes.widgetShowcase,
-              builder: (context, state) => const WidgetShowcasePage(),
+              builder: (context, state) => const WidgetShowcaseHubPage(),
             ),
+            GoRoute(
+              path: AppRoutes.fieldWidgetShowcase,
+              builder: (context, state) => const FieldWidgetShowcasePage(),
+            ),
+            GoRoute(
+              path: AppRoutes.officeWidgetShowcase,
+              builder: (context, state) => const OfficeWidgetShowcasePage(),
+            ),
+          ],
           ..._placeholderRoutes,
         ],
       ),

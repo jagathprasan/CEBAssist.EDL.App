@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme/app_design_tokens.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/widgets/app_loading_skeleton.dart';
@@ -13,6 +14,7 @@ class AppKpiCard extends StatelessWidget {
     this.deltaLabel,
     this.icon,
     this.iconColor,
+    this.trendColor,
     this.onTap,
   });
 
@@ -21,6 +23,7 @@ class AppKpiCard extends StatelessWidget {
   final String? deltaLabel;
   final IconData? icon;
   final Color? iconColor;
+  final Color? trendColor;
   final VoidCallback? onTap;
 
   @override
@@ -31,6 +34,7 @@ class AppKpiCard extends StatelessWidget {
       trendLabel: deltaLabel,
       icon: icon,
       iconColor: iconColor,
+      trendColor: trendColor,
       onTap: onTap,
     );
   }
@@ -111,32 +115,39 @@ class AppQuickActionGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppDesignTokens.ofContext(context);
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: actions.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
-        mainAxisSpacing: AppSpacing.sm,
-        crossAxisSpacing: AppSpacing.sm,
-        childAspectRatio: 1.55,
+        mainAxisSpacing: tokens.gap,
+        crossAxisSpacing: tokens.gap,
+        childAspectRatio: tokens.actionTileAspect,
       ),
       itemBuilder: (context, index) {
         final action = actions[index];
         return AppCard(
           onTap: action.onTap,
+          padding: EdgeInsets.all(tokens.cardPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(action.icon, color: context.colors.primary),
-              const SizedBox(height: AppSpacing.xs),
+              Icon(
+                action.icon,
+                size: tokens.actionIconSize,
+                color: context.colors.primary,
+              ),
+              SizedBox(height: tokens.gap / 2),
               Text(
                 action.label,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: context.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: tokens.bodySize,
                 ),
               ),
             ],
