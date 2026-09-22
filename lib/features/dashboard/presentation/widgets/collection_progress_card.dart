@@ -17,11 +17,7 @@ class CollectionProgressCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-        boxShadow: appCardShadow(context),
-      ),
+      decoration: AppSurfaces.card(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

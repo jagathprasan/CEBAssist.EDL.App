@@ -142,10 +142,10 @@ class _NotificationTile extends StatelessWidget {
       color: notification.isRead
           ? context.colors.surfaceContainerLowest
           : context.semantic.infoContainer.withValues(alpha: 0.45),
-      borderRadius: AppRadius.borderMd,
+      borderRadius: AppRadius.borderLg,
       child: InkWell(
         onTap: notification.isRead ? null : onMarkRead,
-        borderRadius: AppRadius.borderMd,
+        borderRadius: AppRadius.borderLg,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(

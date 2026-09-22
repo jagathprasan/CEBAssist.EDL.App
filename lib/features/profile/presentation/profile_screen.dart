@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/utils/validators.dart';
@@ -122,10 +123,7 @@ class _IdentityCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-      ),
+      decoration: AppSurfaces.card(context),
       child: Column(
         children: [
           AppUserAvatar(
@@ -205,10 +203,7 @@ class _ProfileField extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-      ),
+      decoration: AppSurfaces.card(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

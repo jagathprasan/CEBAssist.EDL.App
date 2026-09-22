@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/theme/app_shadows.dart';
 import '../../../app/theme/app_sizes.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/widgets/app_status_chip.dart';
 
@@ -29,14 +29,11 @@ class AppCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = Container(
       margin: margin,
-      padding: padding ?? const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: color ?? context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-        border: Border.all(
-          color: context.colors.outlineVariant.withValues(alpha: 0.35),
-        ),
-        boxShadow: elevated ? AppShadows.md(context) : AppShadows.sm(context),
+      padding: padding ?? const EdgeInsets.all(AppSpacing.md + 2),
+      decoration: AppSurfaces.card(
+        context,
+        color: color,
+        elevated: elevated,
       ),
       child: child,
     );
@@ -46,7 +43,7 @@ class AppCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: AppRadius.borderMd,
+        borderRadius: AppRadius.borderLg,
         child: content,
       ),
     );
@@ -129,52 +126,50 @@ class AppStatCard extends StatelessWidget {
     return AppCard(
       onTap: onTap,
       elevated: true,
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (icon != null)
-                AppIconBox(icon: icon!, color: accent, size: 40),
-              const Spacer(),
-              Icon(
-                Icons.show_chart_rounded,
-                size: 20,
-                color: trendColor ?? accent,
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
+              if (icon != null) ...[
+                const SizedBox(width: AppSpacing.xs),
+                AppIconBox(icon: icon!, color: accent, size: 36),
+              ],
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w700,
               letterSpacing: -0.8,
               height: 1.05,
             ),
           ),
-          const SizedBox(height: AppSpacing.xxs),
-          Text(
-            label,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: context.textTheme.bodySmall?.copyWith(
-              color: context.colors.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
           if (trendLabel != null) ...[
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: 6),
             Text(
               trendLabel!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: trendColor ?? accent,
-                fontWeight: FontWeight.w700,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: trendColor ?? context.semantic.success,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -203,8 +198,8 @@ class AppIconBox extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: context.isDark ? 0.22 : 0.12),
-        borderRadius: AppRadius.borderSm,
+        color: color.withValues(alpha: context.isDark ? 0.22 : 0.1),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Icon(icon, color: color, size: size * 0.48),
     );
@@ -380,7 +375,8 @@ class AppSectionHeader extends StatelessWidget {
                 Text(
                   title,
                   style: context.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.3,
                   ),
                 ),
                 if (subtitle != null)

@@ -29,12 +29,27 @@ class AppStatusChip extends StatelessWidget {
         color: colors.background,
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(
-        label,
-        style: context.textTheme.labelSmall?.copyWith(
-          color: colors.foreground,
-          fontWeight: FontWeight.w700,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: compact ? 6 : 7,
+            height: compact ? 6 : 7,
+            decoration: BoxDecoration(
+              color: colors.foreground,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: compact ? 5 : 6),
+          Text(
+            label,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: colors.foreground,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.1,
+            ),
+          ),
+        ],
       ),
     );
   }

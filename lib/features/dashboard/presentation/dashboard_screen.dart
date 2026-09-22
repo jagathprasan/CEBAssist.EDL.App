@@ -131,8 +131,8 @@ class _Header extends StatelessWidget {
         Text(
           greeting,
           style: context.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.4,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.35,
           ),
         ),
         const SizedBox(height: 4),
