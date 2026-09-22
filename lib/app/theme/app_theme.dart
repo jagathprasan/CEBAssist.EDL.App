@@ -446,7 +446,7 @@ class AppSurfaces {
     return const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0xFFF7F8FA), Color(0xFFF3F5F8)],
+      colors: [Color(0xFFFFFFFF), Color(0xFFF6F7F8)],
     );
   }
 
