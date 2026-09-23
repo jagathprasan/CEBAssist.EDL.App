@@ -86,7 +86,8 @@ class _AppMapState extends State<AppMap> {
           Text(
             widget.title!,
             style: context.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -0.25,
             ),
           ),
           if (widget.subtitle != null)
@@ -102,7 +103,7 @@ class _AppMapState extends State<AppMap> {
           height: widget.height,
           decoration: BoxDecoration(
             borderRadius: AppRadius.borderXl,
-            boxShadow: AppShadows.md(context),
+            boxShadow: AppShadows.sm(context),
             border: Border.all(
               color: context.colors.outlineVariant.withValues(alpha: 0.6),
             ),

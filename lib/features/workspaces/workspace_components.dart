@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_spacing.dart';
+import '../../app/theme/app_theme.dart';
 import '../../core/extensions/context_extensions.dart';
 import 'workspace_mode.dart';
 
@@ -34,7 +35,7 @@ class WorkspaceActionButton extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: metrics.bodySize,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -52,7 +53,7 @@ class WorkspaceActionButton extends StatelessWidget {
         ),
       ),
       shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: AppRadius.borderMd),
+        const RoundedRectangleBorder(borderRadius: AppRadius.borderPill),
       ),
     );
 
@@ -91,17 +92,7 @@ class WorkspaceCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(metrics.cardPadding),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-        boxShadow: [
-          BoxShadow(
-            color: context.colors.shadow.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: AppSurfaces.card(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -155,22 +146,30 @@ class WorkspaceMetricTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: context.colors.primary, size: metrics.iconSize),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: metrics.labelSize,
+                    color: context.colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+              Icon(icon, color: context.colors.primary, size: metrics.iconSize),
+            ],
+          ),
           SizedBox(height: metrics.gap / 2),
           Text(
             value,
             style: TextStyle(
-              fontSize: metrics.isField ? 32 : 22,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: metrics.labelSize,
-              color: context.colors.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
+              fontSize: metrics.isField ? 32 : 26,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.6,
+              height: 1.05,
             ),
           ),
         ],

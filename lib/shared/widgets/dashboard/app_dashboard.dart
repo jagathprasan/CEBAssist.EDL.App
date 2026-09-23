@@ -77,7 +77,8 @@ class AppMetricCard extends StatelessWidget {
                 Text(
                   value,
                   style: context.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.4,
                   ),
                 ),
                 if (caption != null)
@@ -134,10 +135,10 @@ class AppQuickActionGrid extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                action.icon,
-                size: tokens.actionIconSize,
+              AppIconBox(
+                icon: action.icon,
                 color: context.colors.primary,
+                size: tokens.isField ? 56 : 44,
               ),
               SizedBox(height: tokens.gap / 2),
               Text(
@@ -146,7 +147,7 @@ class AppQuickActionGrid extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w600,
                   fontSize: tokens.bodySize,
                 ),
               ),

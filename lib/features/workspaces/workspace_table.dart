@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_spacing.dart';
+import '../../app/theme/app_theme.dart';
 import '../../core/extensions/context_extensions.dart';
 import '../../core/widgets/app_status_chip.dart';
 import 'workspace_mode.dart';
@@ -36,10 +37,8 @@ class WorkspaceDataTable extends StatelessWidget {
     final metrics = WorkspaceScope.metricsOf(context);
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: context.colors.outlineVariant),
-        borderRadius: AppRadius.borderMd,
-      ),
+      clipBehavior: Clip.antiAlias,
+      decoration: AppSurfaces.card(context, elevated: false),
       child: Column(
         children: [
           Container(
@@ -50,7 +49,7 @@ class WorkspaceDataTable extends StatelessWidget {
             decoration: BoxDecoration(
               color: context.colors.surfaceContainerHigh,
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(AppRadius.md),
+                top: Radius.circular(AppRadius.lg),
               ),
             ),
             child: Row(
@@ -65,7 +64,7 @@ class WorkspaceDataTable extends StatelessWidget {
                           : TextAlign.start,
                       style: TextStyle(
                         fontSize: metrics.labelSize,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w600,
                         color: context.colors.onSurfaceVariant,
                       ),
                     ),

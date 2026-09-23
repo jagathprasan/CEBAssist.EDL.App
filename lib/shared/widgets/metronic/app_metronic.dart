@@ -55,7 +55,7 @@ class AppAlert extends StatelessWidget {
         color: context.isDark
             ? color.withValues(alpha: 0.16)
             : color.withValues(alpha: 0.12),
-        borderRadius: AppRadius.borderMd,
+        borderRadius: AppRadius.borderLg,
         border: Border.all(color: color.withValues(alpha: 0.18)),
       ),
       child: Row(

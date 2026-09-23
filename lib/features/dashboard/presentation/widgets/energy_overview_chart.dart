@@ -20,11 +20,7 @@ class EnergyOverviewChart extends StatelessWidget {
         .fold<double>(0, (a, b) => a > b ? a : b);
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-        boxShadow: appCardShadow(context),
-      ),
+      decoration: AppSurfaces.card(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -118,12 +114,20 @@ class EnergyOverviewChart extends StatelessWidget {
                 lineBarsData: [
                   LineChartBarData(
                     isCurved: true,
-                    barWidth: 3,
-                    color: context.colors.primary,
-                    dotData: const FlDotData(show: true),
+                    curveSmoothness: 0.28,
+                    barWidth: 2.4,
+                    color: const Color(0xFF3B82F6),
+                    dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: context.colors.primary.withValues(alpha: 0.12),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          const Color(0xFF3B82F6).withValues(alpha: 0.28),
+                          const Color(0xFF3B82F6).withValues(alpha: 0.02),
+                        ],
+                      ),
                     ),
                     spots: [
                       for (var i = 0; i < points.length; i++)

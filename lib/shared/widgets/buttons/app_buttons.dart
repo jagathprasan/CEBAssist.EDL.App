@@ -84,7 +84,7 @@ class AppButton extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: resolvedMode.isField ? tokens.bodySize : null,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -101,7 +101,7 @@ class AppButton extends StatelessWidget {
       ),
       elevation: const WidgetStatePropertyAll(0),
       shape: const WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: AppRadius.borderSm),
+        RoundedRectangleBorder(borderRadius: AppRadius.borderPill),
       ),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(

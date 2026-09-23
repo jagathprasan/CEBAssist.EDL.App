@@ -234,7 +234,8 @@ class AppPageHeader extends StatelessWidget {
                 Text(
                   title,
                   style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.3,
                   ),
                 ),
                 if (subtitle != null) ...[

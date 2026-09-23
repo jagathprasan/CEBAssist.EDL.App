@@ -44,7 +44,7 @@ The debug banner is already disabled in application code.
 
 This EDL app authenticates against the same CEBAssist staff directory as the web portal. Use your **Username** and **Password** — there are no demo accounts in the app.
 
-Local emulator (Android) talks to the aggregator through the external gateway at `http://10.0.2.2:8092`:
+By default the app talks to the live gateway at `https://edl.cebassist.lk`:
 
 ```text
 POST /EDL/Login
@@ -52,10 +52,12 @@ GET  /EDL/Me
 POST /EDL/Logout
 ```
 
-Override the host for a device or production build:
+To test a local aggregator, uncomment one `API_BASE_URL` line in `.env` and restart the app. Android emulator uses `http://10.0.2.2:8092`. Desktop and the iOS simulator use `http://localhost:8092`. Comment the line out again to return to live.
+
+A one-off host can still be passed without editing `.env`:
 
 ```bash
-flutter run --dart-define=API_BASE_URL=https://edl.cebassist.lk
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8092
 ```
 
 Access tokens are stored in encrypted secure storage only when **Remember me** is checked. Passwords are never persisted.

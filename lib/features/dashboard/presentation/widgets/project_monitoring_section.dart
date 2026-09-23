@@ -123,11 +123,7 @@ class _ProjectMetricCard extends StatelessWidget {
     final color = _color(context);
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: AppRadius.borderMd,
-        boxShadow: appCardShadow(context),
-      ),
+      decoration: AppSurfaces.card(context),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -150,7 +146,7 @@ class _ProjectMetricCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: -0.6,
                   ),
                 ),
