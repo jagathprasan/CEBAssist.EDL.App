@@ -38,6 +38,30 @@ class Validators {
     return null;
   }
 
+  static String? requiredEmail(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) {
+      return 'Please enter your email.';
+    }
+    return email(value);
+  }
+
+  /// Mobile or other contact number. Accepts local and international formats.
+  static String? contactNumber(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) {
+      return 'Please enter your contact number.';
+    }
+    if (text.length > 32 || !RegExp(r'^[0-9+\s\-()]+$').hasMatch(text)) {
+      return 'Enter a valid contact number.';
+    }
+    final digits = text.replaceAll(RegExp(r'\D'), '');
+    if (digits.length < 7 || digits.length > 15) {
+      return 'Enter a valid contact number.';
+    }
+    return null;
+  }
+
   static String? newPassword(String? value) {
     final text = value ?? '';
     if (text.length < 10) {

@@ -23,7 +23,10 @@ void main() {
 
     expect(container.read(authProvider).isAuthenticated, isTrue);
 
-    final logoutButton = find.widgetWithText(FilledButton, 'Logout');
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+
+    final logoutButton = find.widgetWithText(ListTile, 'Logout');
     await tester.ensureVisible(logoutButton);
     await tester.tap(logoutButton);
     await tester.pumpAndSettle();

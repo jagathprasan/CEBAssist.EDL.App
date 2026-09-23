@@ -23,12 +23,17 @@ void main() {
 
     expect(container.read(themeModeProvider), ThemeMode.system);
 
-    await tester.tap(find.text('Dark'));
+    await tester.tap(find.byType(Switch).at(0));
+    await tester.pump();
+
+    expect(container.read(themeModeProvider), ThemeMode.light);
+
+    await tester.tap(find.byType(Switch).at(1));
     await tester.pump();
 
     expect(container.read(themeModeProvider), ThemeMode.dark);
 
-    await tester.tap(find.text('Light'));
+    await tester.tap(find.byType(Switch).at(1));
     await tester.pump();
 
     expect(container.read(themeModeProvider), ThemeMode.light);

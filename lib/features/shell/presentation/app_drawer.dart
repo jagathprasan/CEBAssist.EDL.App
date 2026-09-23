@@ -115,66 +115,64 @@ class AppDrawer extends ConsumerWidget {
       child: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md,
-                AppSpacing.md,
-                AppSpacing.md,
-                AppSpacing.sm,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const AppLogo(height: 32, style: AppLogoStyle.full),
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    children: [
-                      AppUserAvatar(
-                        name: user.fullName,
-                        imageUrl: user.avatarUrl,
-                        radius: 24,
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          context.go(AppRoutes.profile);
-                        },
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user.fullName,
-                              style: context.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              user.titleLine.isEmpty
-                                  ? AppConfig.companyName
-                                  : user.titleLine,
-                              style: context.textTheme.bodySmall?.copyWith(
-                                color: context.colors.onSurfaceVariant,
-                              ),
-                            ),
-                            if (user.employeeId.isNotEmpty)
+            Material(
+              color: Theme.of(context).drawerTheme.backgroundColor ??
+                  context.colors.surfaceContainerLowest,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.md,
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const AppLogo(height: 32, style: AppLogoStyle.full),
+                    const SizedBox(height: AppSpacing.md),
+                    Row(
+                      children: [
+                        AppUserAvatar(
+                          name: user.fullName,
+                          imageUrl: user.avatarUrl,
+                          radius: 24,
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            context.go(AppRoutes.profile);
+                          },
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Text(
-                                'Employee ID ${user.employeeId}',
-                                style: context.textTheme.labelSmall?.copyWith(
+                                user.fullName,
+                                style: context.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                user.titleLine.isEmpty
+                                    ? AppConfig.companyName
+                                    : user.titleLine,
+                                style: context.textTheme.bodySmall?.copyWith(
                                   color: context.colors.onSurfaceVariant,
                                 ),
                               ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             const Divider(),
             Expanded(
               child: ListView(
+                clipBehavior: Clip.hardEdge,
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
                 children: [
                   _DrawerTile(
@@ -302,24 +300,31 @@ class _DrawerTile extends StatelessWidget {
         AppSpacing.xs,
         2,
       ),
-      child: ListTile(
-        selected: selected,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.borderSm),
-        leading: Icon(destination.icon),
-        title: Text(
-          destination.label,
-          style: context.textTheme.bodyMedium?.copyWith(
-            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+      child: Material(
+        color: selected
+            ? context.colors.primary.withValues(alpha: 0.1)
+            : Colors.transparent,
+        borderRadius: AppRadius.borderSm,
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          selected: selected,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.borderSm),
+          leading: Icon(destination.icon),
+          title: Text(
+            destination.label,
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            ),
           ),
+          selectedTileColor: Colors.transparent,
+          selectedColor: context.colors.primary,
+          onTap: () {
+            Navigator.of(context).pop();
+            if (!selected) {
+              context.go(destination.route);
+            }
+          },
         ),
-        selectedTileColor: context.colors.primary.withValues(alpha: 0.1),
-        selectedColor: context.colors.primary,
-        onTap: () {
-          Navigator.of(context).pop();
-          if (!selected) {
-            context.go(destination.route);
-          }
-        },
       ),
     );
   }

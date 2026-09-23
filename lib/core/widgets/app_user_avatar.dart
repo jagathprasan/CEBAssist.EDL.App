@@ -45,10 +45,17 @@ class AppUserAvatar extends StatelessWidget {
     );
 
     if (onTap == null) return avatar;
-    return InkWell(
-      onTap: onTap,
-      customBorder: const CircleBorder(),
-      child: avatar,
+    // Local Material keeps splash/highlight on the circle only. Painting on
+    // the drawer Material can leave a rounded blue blotch behind the name.
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: avatar,
+      ),
     );
   }
 }
