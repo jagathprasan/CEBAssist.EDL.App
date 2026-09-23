@@ -16,6 +16,7 @@ dependencies:
   shared_preferences: ^2.5.5
   flutter_secure_storage: ^9.2.4
   http: ^1.5.0
+  flutter_dotenv: ^5.2.1
   google_fonts: ^8.2.1
   intl: ^0.20.3
   flutter_map: ^8.3.2
@@ -38,4 +39,5 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/images/

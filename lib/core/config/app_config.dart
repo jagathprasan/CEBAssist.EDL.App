@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'env_config.dart';
 
 /// Runtime configuration for the EDL CEBAssist mobile client.
 class AppConfig {
@@ -9,19 +9,33 @@ class AppConfig {
 
   static const String companyName = 'EDL';
 
+  /// Live CEBAssist gateway. Used unless `.env` or a dart-define sets a host.
+  static const String liveApiBaseUrl = 'https://edl.cebassist.lk';
+
   static const String _definedBaseUrl = String.fromEnvironment('API_BASE_URL');
 
-  /// Override at build time:
-  /// `flutter run --dart-define=API_BASE_URL=https://edl.cebassist.lk`
+  /// Host for the CEBAssist API aggregator.
+  ///
+  /// Priority:
+  /// 1. `--dart-define=API_BASE_URL=...` (CI or a one-off run)
+  /// 2. `API_BASE_URL` in `.env` (local testing)
+  /// 3. [liveApiBaseUrl]
   static String get apiBaseUrl {
-    if (_definedBaseUrl.isNotEmpty) {
-      return _definedBaseUrl.replaceAll(RegExp(r'/$'), '');
+    final fromDefine = _definedBaseUrl.trim();
+    if (fromDefine.isNotEmpty) {
+      return _withoutTrailingSlash(fromDefine);
     }
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:8092';
+
+    final fromEnv = EnvConfig.apiBaseUrl;
+    if (fromEnv != null && fromEnv.isNotEmpty) {
+      return fromEnv;
     }
-    return 'http://localhost:8092';
+
+    return liveApiBaseUrl;
   }
+
+  static String _withoutTrailingSlash(String url) =>
+      url.replaceAll(RegExp(r'/$'), '');
 
   static const Duration requestTimeout = Duration(seconds: 20);
 }
