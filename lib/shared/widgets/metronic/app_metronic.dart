@@ -315,16 +315,39 @@ class AppToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilterChip(
-      selected: selected,
-      showCheckmark: true,
-      visualDensity: VisualDensity.compact,
-      selectedColor: context.colors.primaryContainer,
-      backgroundColor: context.colors.surfaceContainerHighest,
-      checkmarkColor: context.colors.primary,
-      onSelected: onChanged,
-      avatar: icon == null ? null : Icon(icon, size: 16),
-      label: Text(label),
+    final ink = Theme.of(context).brightness == Brightness.dark
+        ? context.colors.onSurface
+        : const Color(0xFF1C1C1E);
+    return Material(
+      color: selected ? ink : context.colors.surfaceContainerHigh,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        onTap: () => onChanged(!selected),
+        borderRadius: BorderRadius.circular(999),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(
+                  icon,
+                  size: 14,
+                  color: selected ? Colors.white : context.colors.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6),
+              ],
+              Text(
+                label,
+                style: context.textTheme.labelLarge?.copyWith(
+                  color: selected ? Colors.white : context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

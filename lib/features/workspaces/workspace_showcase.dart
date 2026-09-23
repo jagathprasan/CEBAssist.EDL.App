@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_breakpoints.dart';
+import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../core/extensions/context_extensions.dart';
 import '../../core/widgets/app_status_chip.dart';
@@ -9,7 +10,7 @@ import '../../shared/widgets/widgets.dart';
 import '../../showcase/app_widget_catalog.dart';
 import 'workspace_kit.dart';
 
-/// Office dashboard built from the Metronic-aligned shared widget kit.
+/// Office dashboard using the EstateHub soft-card widget kit.
 class WorkspaceShowcase extends StatefulWidget {
   const WorkspaceShowcase({
     super.key,
@@ -220,19 +221,25 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
       ),
     );
     final networkMap = AppDashboardSection(
-      title: 'Network map',
-      subtitle: 'Area office, feeders, and active crews',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AppMap(
-            height: tablet ? 300 : 240,
-            center: EdlNetworkSites.colombo,
-            markers: EdlNetworkSites.all,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppMapLegend(markers: EdlNetworkSites.all),
-        ],
+      title: 'Outage map',
+      subtitle: 'Breakdowns, planned outages, and your sites',
+      child: AppCard(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: AppMap(
+                height: tablet ? 340 : 280,
+                center: EdlNetworkSites.island,
+                zoom: 7.2,
+                markers: EdlNetworkSites.all,
+                summary: EdlNetworkSites.outageSummary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
 
@@ -245,12 +252,29 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
           AppFeedback.toast(context, 'Workspace refreshed');
         },
         child: AppScrollableColumn(
-          padding: tablet ? AppSpacing.pagePaddingWide : AppSpacing.pagePadding,
+          padding: EdgeInsets.fromLTRB(
+            tablet ? 24 : 16,
+            8,
+            tablet ? 24 : 16,
+            28,
+          ),
           children: [
-            AppAlert(
-              variant: AppAlertVariant.info,
-              title: 'Desk operations',
-              message: widget.subtitle,
+            Text(
+              widget.title,
+              style: context.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.7,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? context.colors.onSurface
+                    : AppBrandColors.ink,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.subtitle,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
             ),
             SizedBox(height: gap),
             if (tablet)
@@ -272,27 +296,21 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
               child: AppCard(
                 child: Column(
                   children: [
-                    AppListTile(
-                      leading: AppIconBox(
-                        icon: Icons.warning_amber_outlined,
-                        color: context.semantic.warning,
-                        size: 36,
-                      ),
+                    _ScheduleStyleTile(
+                      time: '09:00',
                       title: 'Outage coordination',
-                      subtitle: 'Unit B · delayed consumer access',
+                      detail: 'Unit B · delayed consumer access',
+                      done: false,
                       trailing: const AppStatusBadge(
                         status: AppEntityStatus.delayed,
                       ),
                     ),
-                    const AppDivider(height: AppSpacing.md),
-                    AppListTile(
-                      leading: AppIconBox(
-                        icon: Icons.hourglass_bottom,
-                        color: context.colors.primary,
-                        size: 36,
-                      ),
+                    const SizedBox(height: 12),
+                    _ScheduleStyleTile(
+                      time: '11:30',
                       title: 'Meter replacement',
-                      subtitle: 'Unit C · waiting store issue',
+                      detail: 'Unit C · waiting store issue',
+                      done: true,
                       trailing: const AppStatusBadge(
                         status: AppEntityStatus.inProgress,
                       ),
@@ -333,7 +351,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                   AppStatusSlice(
                     label: 'Open',
                     count: 24,
-                    color: context.colors.primary,
+                    color: AppBrandColors.sky,
                   ),
                   AppStatusSlice(
                     label: 'In progress',
@@ -343,7 +361,7 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
                   AppStatusSlice(
                     label: 'Closed',
                     count: 48,
-                    color: context.semantic.success,
+                    color: AppBrandColors.mint,
                   ),
                 ],
               ),
@@ -363,8 +381,26 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
             AppDashboardSection(
               title: 'Schedule',
               subtitle: 'Select a day to view calendar posts',
+              action: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppBrandColors.ink,
+                  foregroundColor: Colors.white,
+                  shape: const StadiumBorder(),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  minimumSize: const Size(0, 36),
+                ),
+                onPressed: () =>
+                    AppFeedback.toast(context, 'Share schedule (demo)'),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.ios_share_rounded, size: 14),
+                    SizedBox(width: 6),
+                    Text('Share'),
+                  ],
+                ),
+              ),
               child: AppCard(
-                elevated: false,
                 child: WorkspaceCalendar(events: _events),
               ),
             ),
@@ -389,6 +425,76 @@ class _WorkspaceShowcaseState extends State<WorkspaceShowcase> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ScheduleStyleTile extends StatelessWidget {
+  const _ScheduleStyleTile({
+    required this.time,
+    required this.title,
+    required this.detail,
+    required this.done,
+    this.trailing,
+  });
+
+  final String time;
+  final String title;
+  final String detail;
+  final bool done;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 48,
+          child: Text(
+            time,
+            style: context.textTheme.labelMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                detail,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+        const SizedBox(width: 8),
+        Container(
+          width: 22,
+          height: 22,
+          decoration: BoxDecoration(
+            color: done ? AppBrandColors.mint : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+            border: done
+                ? null
+                : Border.all(color: const Color(0xFFD5D8DE), width: 1.4),
+          ),
+          child: done
+              ? const Icon(Icons.check_rounded, size: 14, color: Colors.white)
+              : null,
+        ),
+      ],
     );
   }
 }

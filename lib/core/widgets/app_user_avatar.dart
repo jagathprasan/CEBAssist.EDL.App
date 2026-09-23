@@ -34,6 +34,7 @@ class AppUserAvatar extends StatelessWidget {
                 width: size,
                 height: size,
                 fit: BoxFit.cover,
+                headers: const {'Accept': 'image/*'},
                 errorBuilder: (_, _, _) =>
                     _Initials(name: name, radius: radius),
                 loadingBuilder: (context, child, progress) {

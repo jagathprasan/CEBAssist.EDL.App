@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -46,42 +47,53 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.isDark
-          ? context.colors.surface
-          : const Color(0xFF07111C),
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const AppLogo(
-                  height: 28,
-                  maxWidth: 148,
-                  style: AppLogoStyle.full,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  AppConstants.tagline,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white70,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                RotationTransition(
-                  turns: _controller,
-                  child: SizedBox(
-                    width: 28,
+    final dark = context.isDark;
+    final background = dark
+        ? const Color(0xFF07111C)
+        : context.colors.surface;
+    final onMuted = dark
+        ? Colors.white70
+        : context.colors.onSurfaceVariant;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        backgroundColor: background,
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const AppLogo(
                     height: 28,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.6,
-                      color: context.colors.tertiary,
+                    maxWidth: 148,
+                    style: AppLogoStyle.full,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    AppConstants.tagline,
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: onMuted,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: AppSpacing.xl),
+                  RotationTransition(
+                    turns: _controller,
+                    child: SizedBox(
+                      width: 28,
+                      height: 28,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.6,
+                        color: context.colors.tertiary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

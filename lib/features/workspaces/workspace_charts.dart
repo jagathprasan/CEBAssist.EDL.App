@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_colors.dart';
 import '../../core/extensions/context_extensions.dart';
 import 'workspace_mode.dart';
 
@@ -87,12 +88,20 @@ class WorkspaceLineChart extends StatelessWidget {
                   FlSpot(i.toDouble(), points[i].value),
               ],
               isCurved: true,
-              color: context.colors.primary,
-              barWidth: metrics.isField ? 4 : 3,
-              dotData: FlDotData(show: true),
+              curveSmoothness: 0.32,
+              color: AppBrandColors.mint,
+              barWidth: metrics.isField ? 3.2 : 2.4,
+              dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: context.colors.primary.withValues(alpha: 0.12),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppBrandColors.mint.withValues(alpha: 0.4),
+                    AppBrandColors.mint.withValues(alpha: 0.02),
+                  ],
+                ),
               ),
             ),
           ],
@@ -176,7 +185,7 @@ class WorkspaceBarChart extends StatelessWidget {
                     toY: points[i].value,
                     width: metrics.isField ? 22 : 16,
                     borderRadius: BorderRadius.circular(8),
-                    color: context.colors.primary,
+                    color: AppBrandColors.sky,
                   ),
                 ],
               ),

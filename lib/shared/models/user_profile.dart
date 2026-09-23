@@ -119,7 +119,7 @@ class UserProfile {
       subUnitId: read('subUnitId', 'SubUnitId'),
       subUnitName: read('subUnitName', 'SubUnitName'),
       status: read('status', 'Status', 'Active'),
-      avatarUrl: read('avatarUrl', 'AvatarUrl').ifEmpty(null),
+      avatarUrl: _readAvatar(json),
       roles: readRoles(),
     );
   }
@@ -209,6 +209,25 @@ class UserProfile {
     status: 'Active',
     roles: ['User'],
   );
+}
+
+String? _readAvatar(Map<String, dynamic> json) {
+  const keys = [
+    'avatarUrl',
+    'AvatarUrl',
+    'pictureUrl',
+    'PictureUrl',
+    'profileImage',
+    'ProfileImage',
+    'profile_image',
+  ];
+  for (final key in keys) {
+    final value = json[key];
+    if (value == null) continue;
+    final text = value.toString().trim();
+    if (text.isNotEmpty) return text;
+  }
+  return null;
 }
 
 extension on String {

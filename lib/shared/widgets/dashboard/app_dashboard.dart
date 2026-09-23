@@ -131,14 +131,28 @@ class AppQuickActionGrid extends StatelessWidget {
         final action = actions[index];
         return AppCard(
           onTap: action.onTap,
-          padding: EdgeInsets.all(tokens.cardPadding),
+          padding: EdgeInsets.symmetric(
+            horizontal: tokens.gap / 2,
+            vertical: tokens.cardPadding,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AppIconBox(
-                icon: action.icon,
-                color: context.colors.primary,
-                size: tokens.isField ? 56 : 44,
+              Container(
+                width: tokens.isField ? 56 : 48,
+                height: tokens.isField ? 56 : 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.colors.outline,
+                    width: 1.2,
+                  ),
+                ),
+                child: Icon(
+                  action.icon,
+                  size: tokens.isField ? 26 : 22,
+                  color: context.colors.onSurface,
+                ),
               ),
               SizedBox(height: tokens.gap / 2),
               Text(
@@ -146,9 +160,9 @@ class AppQuickActionGrid extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: context.textTheme.titleMedium?.copyWith(
+                style: context.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
-                  fontSize: tokens.bodySize,
+                  fontSize: tokens.isField ? tokens.bodySize : null,
                 ),
               ),
             ],

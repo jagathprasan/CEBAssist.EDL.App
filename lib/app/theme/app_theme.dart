@@ -450,22 +450,33 @@ class AppSurfaces {
     );
   }
 
-  /// Shared card surface: white, hairline border, soft shadow.
+  /// Soft EstateHub card: white fill, large radius, light shadow, no hard border.
   static BoxDecoration card(
     BuildContext context, {
     Color? color,
     bool elevated = true,
-    BorderRadius radius = AppRadius.borderLg,
+    BorderRadius radius = AppRadius.borderXl,
   }) {
     final scheme = Theme.of(context).colorScheme;
     final dark = scheme.brightness == Brightness.dark;
     return BoxDecoration(
       color: color ?? scheme.surfaceContainerLowest,
       borderRadius: radius,
-      border: Border.all(
-        color: scheme.outlineVariant.withValues(alpha: dark ? 0.9 : 1),
-      ),
-      boxShadow: elevated ? AppShadows.sm(context) : const [],
+      border: dark
+          ? Border.all(color: scheme.outlineVariant.withValues(alpha: 0.7))
+          : null,
+      boxShadow: elevated
+          ? [
+              BoxShadow(
+                color: const Color(
+                  0xFF1B3A4B,
+                ).withValues(alpha: dark ? 0.28 : 0.07),
+                blurRadius: 28,
+                offset: const Offset(0, 12),
+                spreadRadius: -8,
+              ),
+            ]
+          : const [],
     );
   }
 }

@@ -14,6 +14,12 @@ class AppBrandColors {
   static const Color error = Color(0xFFDC2626);
   static const Color portfolio = Color(0xFF6D28D9);
 
+  /// EstateHub-style accents used on soft dashboard cards and charts.
+  static const Color ink = Color(0xFF1C1C1E);
+  static const Color mint = Color(0xFF6FDB96);
+  static const Color sky = Color(0xFF8EC9F5);
+  static const Color statusYellow = Color(0xFFF6C445);
+
   /// Wordmark colours matching the CEBAssist logo artwork.
   static const Color logoGrey = Color(0xFF58595B);
   static const Color logoNavy = Color(0xFF1B5E82);

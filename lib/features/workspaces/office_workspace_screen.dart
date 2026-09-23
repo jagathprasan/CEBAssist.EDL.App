@@ -13,7 +13,7 @@ class OfficeWorkspaceScreen extends StatelessWidget {
       child: WorkspaceShowcase(
         title: 'Office Workspace',
         subtitle:
-            'Desk-side operations: denser layout, KPI cards, posts, and calendar. Built from the Metronic-aligned widget kit.',
+            'Desk-side operations with soft cards, KPI tiles, posts, and calendar.',
       ),
     );
   }

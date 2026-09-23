@@ -123,10 +123,11 @@ class AppStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = iconColor ?? context.colors.primary;
+    // [icon] retained for call-site compatibility with KPI cards.
     return AppCard(
       onTap: onTap,
       elevated: true,
-      padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 14, 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -138,37 +139,46 @@ class AppStatCard extends StatelessWidget {
                   label,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: context.textTheme.labelLarge?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: context.colors.onSurface,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              if (icon != null) ...[
-                const SizedBox(width: AppSpacing.xs),
-                AppIconBox(icon: icon!, color: accent, size: 36),
-              ],
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: context.colors.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.north_east_rounded,
+                  size: 14,
+                  color: accent,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: 12),
           Text(
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w700,
-              letterSpacing: -0.8,
+              letterSpacing: -1.0,
               height: 1.05,
             ),
           ),
           if (trendLabel != null) ...[
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             Text(
               trendLabel!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: context.textTheme.labelMedium?.copyWith(
-                color: trendColor ?? context.semantic.success,
+                color: trendColor ?? const Color(0xFF6FDB96),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -374,9 +384,9 @@ class AppSectionHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.3,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.35,
                   ),
                 ),
                 if (subtitle != null)
